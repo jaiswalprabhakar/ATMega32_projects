@@ -1,0 +1,535 @@
+
+whitefollower.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000036a  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  000003de  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          0000000a  00800060  00800060  000003de  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  000003de  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000410  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000020  00000000  00000000  0000044c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000005ef  00000000  00000000  0000046c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000519  00000000  00000000  00000a5b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   000003b2  00000000  00000000  00000f74  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000024  00000000  00000000  00001328  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    000002fa  00000000  00000000  0000134c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000010  00000000  00000000  00001646  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   8:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	20 e0       	ldi	r18, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	aa 36       	cpi	r26, 0x6A	; 106
+  6c:	b2 07       	cpc	r27, r18
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 3e 00 	call	0x7c	; 0x7c <main>
+  74:	0c 94 b3 01 	jmp	0x366	; 0x366 <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <main>:
+#include <avr/sfr_defs.h>
+//#include <util/delay.h>
+int ir1,ir2,ir3,ir4,ir5;
+int main()
+{
+	DDRA = 0xFF;
+  7c:	8f ef       	ldi	r24, 0xFF	; 255
+  7e:	8a bb       	out	0x1a, r24	; 26
+	DDRD = 0x00;
+  80:	11 ba       	out	0x11, r1	; 17
+	while(1)
+	{
+		
+		
+		
+			ir1 = bit_is_clear(PIND,2);
+  82:	91 e0       	ldi	r25, 0x01	; 1
+  84:	80 e0       	ldi	r24, 0x00	; 0
+  86:	40 e0       	ldi	r20, 0x00	; 0
+  88:	30 e0       	ldi	r19, 0x00	; 0
+		   (ir1 == false && ir2 ==  true && ir3 == true  && ir4 == true  && ir5 == false) ||
+		   (ir1 == false && ir2 ==  true && ir3 == false && ir4 ==  true && ir5 == false))
+		          {
+		           //PORTA = 0b00000000;
+			       //_delay_us(40);
+			        PORTA = 0b10100000;//straight 
+  8a:	c0 ea       	ldi	r28, 0xA0	; 160
+			    PORTA = 0b00100000; // Smooth Right
+				}
+		if((ir1 == false && ir2 == false && ir3 == true && ir4 == true && ir5== true ) ||
+		   (ir1 == false && ir2 == true  && ir3 == true && ir4 == true && ir5== true ))
+		       {
+			    PORTA = 0b01100000; // Sharp right
+  8c:	10 e6       	ldi	r17, 0x60	; 96
+           (ir1 == false && ir2 == false && ir3 == false && ir4 == true  && ir5== true ) ||
+		   (ir1 == false && ir2 == false && ir3 == false && ir4 == false && ir5== true ))
+		        {
+		        //PORTA = 0b00000000;
+			    //_delay_us(40);
+			    PORTA = 0b00100000; // Smooth Right
+  8e:	a0 e2       	ldi	r26, 0x20	; 32
+			      PORTA = 0b10000000; // Smooth Left
+			     }
+		if((ir1 == true && ir2 == true && ir3 == true && ir4 == false && ir5 == false) || 
+		   (ir1 == true && ir2 == true && ir3 == true && ir4 == true  && ir5 == false))
+			    {
+				PORTA = 0b10010000; // Sharp Left
+  90:	0f 2e       	mov	r0, r31
+  92:	f0 e9       	ldi	r31, 0x90	; 144
+  94:	ff 2e       	mov	r15, r31
+  96:	f0 2d       	mov	r31, r0
+		   (ir1 == true && ir2 == true  && ir3 ==  false  && ir4 == false && ir5 == false) ||
+		   (ir1 == true  && ir2 == false && ir3 == false && ir4 == false && ir5 == false))
+		         {
+			      //PORTA = 0b00000000;
+			      //_delay_us(40);
+			      PORTA = 0b10000000; // Smooth Left
+  98:	b0 e8       	ldi	r27, 0x80	; 128
+	while(1)
+	{
+		
+		
+		
+			ir1 = bit_is_clear(PIND,2);
+  9a:	20 b3       	in	r18, 0x10	; 16
+  9c:	69 2f       	mov	r22, r25
+  9e:	58 2f       	mov	r21, r24
+  a0:	72 2f       	mov	r23, r18
+  a2:	74 70       	andi	r23, 0x04	; 4
+  a4:	22 ff       	sbrs	r18, 2
+  a6:	02 c0       	rjmp	.+4      	; 0xac <main+0x30>
+  a8:	64 2f       	mov	r22, r20
+  aa:	53 2f       	mov	r21, r19
+  ac:	60 93 68 00 	sts	0x0068, r22	; 0x800068 <ir1>
+  b0:	50 93 69 00 	sts	0x0069, r21	; 0x800069 <ir1+0x1>
+			ir2 = bit_is_clear(PIND,3);
+  b4:	20 b3       	in	r18, 0x10	; 16
+  b6:	69 2f       	mov	r22, r25
+  b8:	58 2f       	mov	r21, r24
+  ba:	e2 2f       	mov	r30, r18
+  bc:	e8 70       	andi	r30, 0x08	; 8
+  be:	23 ff       	sbrs	r18, 3
+  c0:	02 c0       	rjmp	.+4      	; 0xc6 <main+0x4a>
+  c2:	64 2f       	mov	r22, r20
+  c4:	53 2f       	mov	r21, r19
+  c6:	60 93 66 00 	sts	0x0066, r22	; 0x800066 <ir2>
+  ca:	50 93 67 00 	sts	0x0067, r21	; 0x800067 <ir2+0x1>
+			ir3 = bit_is_clear(PIND,4);
+  ce:	20 b3       	in	r18, 0x10	; 16
+  d0:	69 2f       	mov	r22, r25
+  d2:	58 2f       	mov	r21, r24
+  d4:	f2 2f       	mov	r31, r18
+  d6:	f0 71       	andi	r31, 0x10	; 16
+  d8:	24 ff       	sbrs	r18, 4
+  da:	02 c0       	rjmp	.+4      	; 0xe0 <main+0x64>
+  dc:	64 2f       	mov	r22, r20
+  de:	53 2f       	mov	r21, r19
+  e0:	60 93 62 00 	sts	0x0062, r22	; 0x800062 <ir3>
+  e4:	50 93 63 00 	sts	0x0063, r21	; 0x800063 <ir3+0x1>
+			ir4 = bit_is_clear(PIND,5);
+  e8:	20 b3       	in	r18, 0x10	; 16
+  ea:	69 2f       	mov	r22, r25
+  ec:	58 2f       	mov	r21, r24
+  ee:	02 2f       	mov	r16, r18
+  f0:	00 72       	andi	r16, 0x20	; 32
+  f2:	25 ff       	sbrs	r18, 5
+  f4:	02 c0       	rjmp	.+4      	; 0xfa <main+0x7e>
+  f6:	64 2f       	mov	r22, r20
+  f8:	53 2f       	mov	r21, r19
+  fa:	60 93 60 00 	sts	0x0060, r22	; 0x800060 <__DATA_REGION_ORIGIN__>
+  fe:	50 93 61 00 	sts	0x0061, r21	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+			ir5 = bit_is_clear(PIND,6);
+ 102:	20 b3       	in	r18, 0x10	; 16
+ 104:	69 2f       	mov	r22, r25
+ 106:	58 2f       	mov	r21, r24
+ 108:	d2 2f       	mov	r29, r18
+ 10a:	d0 74       	andi	r29, 0x40	; 64
+ 10c:	26 ff       	sbrs	r18, 6
+ 10e:	02 c0       	rjmp	.+4      	; 0x114 <main+0x98>
+ 110:	64 2f       	mov	r22, r20
+ 112:	53 2f       	mov	r21, r19
+ 114:	60 93 64 00 	sts	0x0064, r22	; 0x800064 <ir5>
+ 118:	50 93 65 00 	sts	0x0065, r21	; 0x800065 <ir5+0x1>
+		
+		
+		
+		
+		if((ir1 == false && ir2 == false && ir3 == true  && ir4 == false && ir5 == false) || 
+ 11c:	77 23       	and	r23, r23
+ 11e:	91 f0       	breq	.+36     	; 0x144 <main+0xc8>
+ 120:	ee 23       	and	r30, r30
+ 122:	29 f0       	breq	.+10     	; 0x12e <main+0xb2>
+ 124:	f1 11       	cpse	r31, r1
+ 126:	eb c0       	rjmp	.+470    	; 0x2fe <main+0x282>
+ 128:	01 11       	cpse	r16, r1
+ 12a:	0a c0       	rjmp	.+20     	; 0x140 <main+0xc4>
+ 12c:	eb c0       	rjmp	.+470    	; 0x304 <main+0x288>
+		   (ir1 == false && ir2 ==  true && ir3 == true  && ir4 == true  && ir5 == false) ||
+ 12e:	f1 11       	cpse	r31, r1
+ 130:	03 c0       	rjmp	.+6      	; 0x138 <main+0xbc>
+ 132:	01 11       	cpse	r16, r1
+ 134:	07 c0       	rjmp	.+14     	; 0x144 <main+0xc8>
+ 136:	04 c0       	rjmp	.+8      	; 0x140 <main+0xc4>
+		   (ir1 == false && ir2 ==  true && ir3 == false && ir4 ==  true && ir5 == false))
+ 138:	ff 23       	and	r31, r31
+ 13a:	21 f0       	breq	.+8      	; 0x144 <main+0xc8>
+ 13c:	01 11       	cpse	r16, r1
+ 13e:	02 c0       	rjmp	.+4      	; 0x144 <main+0xc8>
+		
+		
+		
+		
+		if((ir1 == false && ir2 == false && ir3 == true  && ir4 == false && ir5 == false) || 
+		   (ir1 == false && ir2 ==  true && ir3 == true  && ir4 == true  && ir5 == false) ||
+ 140:	d1 11       	cpse	r29, r1
+		   (ir1 == false && ir2 ==  true && ir3 == false && ir4 ==  true && ir5 == false))
+		          {
+		           //PORTA = 0b00000000;
+			       //_delay_us(40);
+			        PORTA = 0b10100000;//straight 
+ 142:	cb bb       	out	0x1b, r28	; 27
+		          }
+		if((ir1 == false && ir2 ==  true  && ir3 == false && ir4 == false && ir5 == false) || 
+ 144:	60 91 68 00 	lds	r22, 0x0068	; 0x800068 <ir1>
+ 148:	70 91 69 00 	lds	r23, 0x0069	; 0x800069 <ir1+0x1>
+ 14c:	61 15       	cp	r22, r1
+ 14e:	71 05       	cpc	r23, r1
+ 150:	89 f4       	brne	.+34     	; 0x174 <main+0xf8>
+ 152:	60 91 66 00 	lds	r22, 0x0066	; 0x800066 <ir2>
+ 156:	70 91 67 00 	lds	r23, 0x0067	; 0x800067 <ir2+0x1>
+ 15a:	61 30       	cpi	r22, 0x01	; 1
+ 15c:	71 05       	cpc	r23, r1
+ 15e:	09 f0       	breq	.+2      	; 0x162 <main+0xe6>
+ 160:	4f c0       	rjmp	.+158    	; 0x200 <main+0x184>
+ 162:	60 91 62 00 	lds	r22, 0x0062	; 0x800062 <ir3>
+ 166:	70 91 63 00 	lds	r23, 0x0063	; 0x800063 <ir3+0x1>
+ 16a:	62 30       	cpi	r22, 0x02	; 2
+ 16c:	71 05       	cpc	r23, r1
+ 16e:	08 f4       	brcc	.+2      	; 0x172 <main+0xf6>
+ 170:	b8 c0       	rjmp	.+368    	; 0x2e2 <main+0x266>
+ 172:	46 c0       	rjmp	.+140    	; 0x200 <main+0x184>
+		   (ir1 == false && ir2 == true  && ir3 ==  true  && ir4 == false && ir5 == false) ||
+ 174:	61 30       	cpi	r22, 0x01	; 1
+ 176:	71 05       	cpc	r23, r1
+ 178:	09 f0       	breq	.+2      	; 0x17c <main+0x100>
+ 17a:	42 c0       	rjmp	.+132    	; 0x200 <main+0x184>
+		   (ir1 == true && ir2 == true  && ir3 ==  false  && ir4 == false && ir5 == false) ||
+ 17c:	60 91 66 00 	lds	r22, 0x0066	; 0x800066 <ir2>
+ 180:	70 91 67 00 	lds	r23, 0x0067	; 0x800067 <ir2+0x1>
+ 184:	61 30       	cpi	r22, 0x01	; 1
+ 186:	71 05       	cpc	r23, r1
+ 188:	41 f4       	brne	.+16     	; 0x19a <main+0x11e>
+ 18a:	60 91 62 00 	lds	r22, 0x0062	; 0x800062 <ir3>
+ 18e:	70 91 63 00 	lds	r23, 0x0063	; 0x800063 <ir3+0x1>
+ 192:	67 2b       	or	r22, r23
+ 194:	09 f4       	brne	.+2      	; 0x198 <main+0x11c>
+ 196:	ac c0       	rjmp	.+344    	; 0x2f0 <main+0x274>
+ 198:	b8 c0       	rjmp	.+368    	; 0x30a <main+0x28e>
+		   (ir1 == true  && ir2 == false && ir3 == false && ir4 == false && ir5 == false))
+ 19a:	67 2b       	or	r22, r23
+ 19c:	09 f0       	breq	.+2      	; 0x1a0 <main+0x124>
+ 19e:	c6 c0       	rjmp	.+396    	; 0x32c <main+0x2b0>
+ 1a0:	60 91 62 00 	lds	r22, 0x0062	; 0x800062 <ir3>
+ 1a4:	70 91 63 00 	lds	r23, 0x0063	; 0x800063 <ir3+0x1>
+ 1a8:	67 2b       	or	r22, r23
+ 1aa:	09 f4       	brne	.+2      	; 0x1ae <main+0x132>
+ 1ac:	a1 c0       	rjmp	.+322    	; 0x2f0 <main+0x274>
+ 1ae:	70 c0       	rjmp	.+224    	; 0x290 <main+0x214>
+			       //_delay_us(40);
+			        PORTA = 0b10100000;//straight 
+		          }
+		if((ir1 == false && ir2 ==  true  && ir3 == false && ir4 == false && ir5 == false) || 
+		   (ir1 == false && ir2 == true  && ir3 ==  true  && ir4 == false && ir5 == false) ||
+		   (ir1 == true && ir2 == true  && ir3 ==  false  && ir4 == false && ir5 == false) ||
+ 1b0:	60 91 64 00 	lds	r22, 0x0064	; 0x800064 <ir5>
+ 1b4:	70 91 65 00 	lds	r23, 0x0065	; 0x800065 <ir5+0x1>
+ 1b8:	67 2b       	or	r22, r23
+ 1ba:	09 f4       	brne	.+2      	; 0x1be <main+0x142>
+		   (ir1 == true  && ir2 == false && ir3 == false && ir4 == false && ir5 == false))
+		         {
+			      //PORTA = 0b00000000;
+			      //_delay_us(40);
+			      PORTA = 0b10000000; // Smooth Left
+ 1bc:	bb bb       	out	0x1b, r27	; 27
+			     }
+		if((ir1 == true && ir2 == true && ir3 == true && ir4 == false && ir5 == false) || 
+ 1be:	60 91 68 00 	lds	r22, 0x0068	; 0x800068 <ir1>
+ 1c2:	70 91 69 00 	lds	r23, 0x0069	; 0x800069 <ir1+0x1>
+ 1c6:	61 30       	cpi	r22, 0x01	; 1
+ 1c8:	71 05       	cpc	r23, r1
+ 1ca:	09 f4       	brne	.+2      	; 0x1ce <main+0x152>
+ 1cc:	af c0       	rjmp	.+350    	; 0x32c <main+0x2b0>
+ 1ce:	18 c0       	rjmp	.+48     	; 0x200 <main+0x184>
+ 1d0:	60 91 62 00 	lds	r22, 0x0062	; 0x800062 <ir3>
+ 1d4:	70 91 63 00 	lds	r23, 0x0063	; 0x800063 <ir3+0x1>
+ 1d8:	61 30       	cpi	r22, 0x01	; 1
+ 1da:	71 05       	cpc	r23, r1
+ 1dc:	09 f0       	breq	.+2      	; 0x1e0 <main+0x164>
+ 1de:	bb c0       	rjmp	.+374    	; 0x356 <main+0x2da>
+ 1e0:	60 91 60 00 	lds	r22, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 1e4:	70 91 61 00 	lds	r23, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 1e8:	62 30       	cpi	r22, 0x02	; 2
+ 1ea:	71 05       	cpc	r23, r1
+ 1ec:	08 f0       	brcs	.+2      	; 0x1f0 <main+0x174>
+ 1ee:	b3 c0       	rjmp	.+358    	; 0x356 <main+0x2da>
+ 1f0:	60 91 64 00 	lds	r22, 0x0064	; 0x800064 <ir5>
+ 1f4:	70 91 65 00 	lds	r23, 0x0065	; 0x800065 <ir5+0x1>
+ 1f8:	67 2b       	or	r22, r23
+ 1fa:	09 f0       	breq	.+2      	; 0x1fe <main+0x182>
+ 1fc:	ac c0       	rjmp	.+344    	; 0x356 <main+0x2da>
+		   (ir1 == true && ir2 == true && ir3 == true && ir4 == true  && ir5 == false))
+			    {
+				PORTA = 0b10010000; // Sharp Left
+ 1fe:	fb ba       	out	0x1b, r15	; 27
+			    }
+		if((ir1 == false && ir2 == false && ir3 == false && ir4 == true  && ir5== false) || 
+ 200:	60 91 68 00 	lds	r22, 0x0068	; 0x800068 <ir1>
+ 204:	70 91 69 00 	lds	r23, 0x0069	; 0x800069 <ir1+0x1>
+ 208:	67 2b       	or	r22, r23
+ 20a:	09 f0       	breq	.+2      	; 0x20e <main+0x192>
+ 20c:	46 cf       	rjmp	.-372    	; 0x9a <main+0x1e>
+ 20e:	60 91 66 00 	lds	r22, 0x0066	; 0x800066 <ir2>
+ 212:	70 91 67 00 	lds	r23, 0x0067	; 0x800067 <ir2+0x1>
+ 216:	61 15       	cp	r22, r1
+ 218:	71 05       	cpc	r23, r1
+ 21a:	09 f0       	breq	.+2      	; 0x21e <main+0x1a2>
+ 21c:	98 c0       	rjmp	.+304    	; 0x34e <main+0x2d2>
+ 21e:	60 91 62 00 	lds	r22, 0x0062	; 0x800062 <ir3>
+ 222:	70 91 63 00 	lds	r23, 0x0063	; 0x800063 <ir3+0x1>
+ 226:	62 30       	cpi	r22, 0x02	; 2
+ 228:	71 05       	cpc	r23, r1
+ 22a:	08 f0       	brcs	.+2      	; 0x22e <main+0x1b2>
+ 22c:	88 c0       	rjmp	.+272    	; 0x33e <main+0x2c2>
+ 22e:	60 91 60 00 	lds	r22, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 232:	70 91 61 00 	lds	r23, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 236:	61 30       	cpi	r22, 0x01	; 1
+ 238:	71 05       	cpc	r23, r1
+ 23a:	09 f0       	breq	.+2      	; 0x23e <main+0x1c2>
+ 23c:	80 c0       	rjmp	.+256    	; 0x33e <main+0x2c2>
+ 23e:	60 91 64 00 	lds	r22, 0x0064	; 0x800064 <ir5>
+ 242:	70 91 65 00 	lds	r23, 0x0065	; 0x800065 <ir5+0x1>
+ 246:	67 2b       	or	r22, r23
+ 248:	11 f1       	breq	.+68     	; 0x28e <main+0x212>
+ 24a:	79 c0       	rjmp	.+242    	; 0x33e <main+0x2c2>
+		   (ir1 == false && ir2 == false && ir3 == true  && ir4 == true  && ir5== false) ||
+           (ir1 == false && ir2 == false && ir3 == false && ir4 == true  && ir5== true ) ||
+ 24c:	60 91 60 00 	lds	r22, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 250:	70 91 61 00 	lds	r23, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 254:	61 30       	cpi	r22, 0x01	; 1
+ 256:	71 05       	cpc	r23, r1
+ 258:	39 f4       	brne	.+14     	; 0x268 <main+0x1ec>
+ 25a:	60 91 64 00 	lds	r22, 0x0064	; 0x800064 <ir5>
+ 25e:	70 91 65 00 	lds	r23, 0x0065	; 0x800065 <ir5+0x1>
+ 262:	61 30       	cpi	r22, 0x01	; 1
+ 264:	71 05       	cpc	r23, r1
+ 266:	99 f0       	breq	.+38     	; 0x28e <main+0x212>
+		   (ir1 == false && ir2 == false && ir3 == false && ir4 == false && ir5== true ))
+ 268:	60 91 62 00 	lds	r22, 0x0062	; 0x800062 <ir3>
+ 26c:	70 91 63 00 	lds	r23, 0x0063	; 0x800063 <ir3+0x1>
+ 270:	67 2b       	or	r22, r23
+ 272:	e9 f4       	brne	.+58     	; 0x2ae <main+0x232>
+ 274:	60 91 60 00 	lds	r22, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 278:	70 91 61 00 	lds	r23, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 27c:	67 2b       	or	r22, r23
+ 27e:	b9 f4       	brne	.+46     	; 0x2ae <main+0x232>
+ 280:	60 91 64 00 	lds	r22, 0x0064	; 0x800064 <ir5>
+ 284:	70 91 65 00 	lds	r23, 0x0065	; 0x800065 <ir5+0x1>
+ 288:	61 30       	cpi	r22, 0x01	; 1
+ 28a:	71 05       	cpc	r23, r1
+ 28c:	81 f4       	brne	.+32     	; 0x2ae <main+0x232>
+		        {
+		        //PORTA = 0b00000000;
+			    //_delay_us(40);
+			    PORTA = 0b00100000; // Smooth Right
+ 28e:	ab bb       	out	0x1b, r26	; 27
+				}
+		if((ir1 == false && ir2 == false && ir3 == true && ir4 == true && ir5== true ) ||
+ 290:	60 91 68 00 	lds	r22, 0x0068	; 0x800068 <ir1>
+ 294:	70 91 69 00 	lds	r23, 0x0069	; 0x800069 <ir1+0x1>
+ 298:	67 2b       	or	r22, r23
+ 29a:	09 f0       	breq	.+2      	; 0x29e <main+0x222>
+ 29c:	fe ce       	rjmp	.-516    	; 0x9a <main+0x1e>
+ 29e:	60 91 66 00 	lds	r22, 0x0066	; 0x800066 <ir2>
+ 2a2:	70 91 67 00 	lds	r23, 0x0067	; 0x800067 <ir2+0x1>
+ 2a6:	62 30       	cpi	r22, 0x02	; 2
+ 2a8:	71 05       	cpc	r23, r1
+ 2aa:	08 f0       	brcs	.+2      	; 0x2ae <main+0x232>
+ 2ac:	f6 ce       	rjmp	.-532    	; 0x9a <main+0x1e>
+ 2ae:	60 91 62 00 	lds	r22, 0x0062	; 0x800062 <ir3>
+ 2b2:	70 91 63 00 	lds	r23, 0x0063	; 0x800063 <ir3+0x1>
+ 2b6:	61 30       	cpi	r22, 0x01	; 1
+ 2b8:	71 05       	cpc	r23, r1
+ 2ba:	09 f0       	breq	.+2      	; 0x2be <main+0x242>
+ 2bc:	ee ce       	rjmp	.-548    	; 0x9a <main+0x1e>
+ 2be:	60 91 60 00 	lds	r22, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 2c2:	70 91 61 00 	lds	r23, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 2c6:	61 30       	cpi	r22, 0x01	; 1
+ 2c8:	71 05       	cpc	r23, r1
+ 2ca:	09 f0       	breq	.+2      	; 0x2ce <main+0x252>
+ 2cc:	e6 ce       	rjmp	.-564    	; 0x9a <main+0x1e>
+ 2ce:	60 91 64 00 	lds	r22, 0x0064	; 0x800064 <ir5>
+ 2d2:	70 91 65 00 	lds	r23, 0x0065	; 0x800065 <ir5+0x1>
+ 2d6:	61 30       	cpi	r22, 0x01	; 1
+ 2d8:	71 05       	cpc	r23, r1
+ 2da:	09 f0       	breq	.+2      	; 0x2de <main+0x262>
+ 2dc:	de ce       	rjmp	.-580    	; 0x9a <main+0x1e>
+		   (ir1 == false && ir2 == true  && ir3 == true && ir4 == true && ir5== true ))
+		       {
+			    PORTA = 0b01100000; // Sharp right
+ 2de:	1b bb       	out	0x1b, r17	; 27
+ 2e0:	dc ce       	rjmp	.-584    	; 0x9a <main+0x1e>
+			       //_delay_us(40);
+			        PORTA = 0b10100000;//straight 
+		          }
+		if((ir1 == false && ir2 ==  true  && ir3 == false && ir4 == false && ir5 == false) || 
+		   (ir1 == false && ir2 == true  && ir3 ==  true  && ir4 == false && ir5 == false) ||
+		   (ir1 == true && ir2 == true  && ir3 ==  false  && ir4 == false && ir5 == false) ||
+ 2e2:	60 91 60 00 	lds	r22, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 2e6:	70 91 61 00 	lds	r23, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 2ea:	67 2b       	or	r22, r23
+ 2ec:	b9 f0       	breq	.+46     	; 0x31c <main+0x2a0>
+ 2ee:	8f cf       	rjmp	.-226    	; 0x20e <main+0x192>
+ 2f0:	60 91 60 00 	lds	r22, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 2f4:	70 91 61 00 	lds	r23, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 2f8:	67 2b       	or	r22, r23
+ 2fa:	c1 f4       	brne	.+48     	; 0x32c <main+0x2b0>
+ 2fc:	59 cf       	rjmp	.-334    	; 0x1b0 <main+0x134>
+		
+		
+		
+		
+		if((ir1 == false && ir2 == false && ir3 == true  && ir4 == false && ir5 == false) || 
+		   (ir1 == false && ir2 ==  true && ir3 == true  && ir4 == true  && ir5 == false) ||
+ 2fe:	e1 11       	cpse	r30, r1
+ 300:	21 cf       	rjmp	.-446    	; 0x144 <main+0xc8>
+ 302:	1a cf       	rjmp	.-460    	; 0x138 <main+0xbc>
+ 304:	e1 11       	cpse	r30, r1
+ 306:	1e cf       	rjmp	.-452    	; 0x144 <main+0xc8>
+ 308:	1b cf       	rjmp	.-458    	; 0x140 <main+0xc4>
+		         {
+			      //PORTA = 0b00000000;
+			      //_delay_us(40);
+			      PORTA = 0b10000000; // Smooth Left
+			     }
+		if((ir1 == true && ir2 == true && ir3 == true && ir4 == false && ir5 == false) || 
+ 30a:	60 91 66 00 	lds	r22, 0x0066	; 0x800066 <ir2>
+ 30e:	70 91 67 00 	lds	r23, 0x0067	; 0x800067 <ir2+0x1>
+ 312:	61 30       	cpi	r22, 0x01	; 1
+ 314:	71 05       	cpc	r23, r1
+ 316:	09 f0       	breq	.+2      	; 0x31a <main+0x29e>
+ 318:	bb cf       	rjmp	.-138    	; 0x290 <main+0x214>
+ 31a:	5a cf       	rjmp	.-332    	; 0x1d0 <main+0x154>
+			       //_delay_us(40);
+			        PORTA = 0b10100000;//straight 
+		          }
+		if((ir1 == false && ir2 ==  true  && ir3 == false && ir4 == false && ir5 == false) || 
+		   (ir1 == false && ir2 == true  && ir3 ==  true  && ir4 == false && ir5 == false) ||
+		   (ir1 == true && ir2 == true  && ir3 ==  false  && ir4 == false && ir5 == false) ||
+ 31c:	60 91 64 00 	lds	r22, 0x0064	; 0x800064 <ir5>
+ 320:	70 91 65 00 	lds	r23, 0x0065	; 0x800065 <ir5+0x1>
+ 324:	67 2b       	or	r22, r23
+ 326:	09 f4       	brne	.+2      	; 0x32a <main+0x2ae>
+ 328:	49 cf       	rjmp	.-366    	; 0x1bc <main+0x140>
+ 32a:	6a cf       	rjmp	.-300    	; 0x200 <main+0x184>
+		         {
+			      //PORTA = 0b00000000;
+			      //_delay_us(40);
+			      PORTA = 0b10000000; // Smooth Left
+			     }
+		if((ir1 == true && ir2 == true && ir3 == true && ir4 == false && ir5 == false) || 
+ 32c:	60 91 66 00 	lds	r22, 0x0066	; 0x800066 <ir2>
+ 330:	70 91 67 00 	lds	r23, 0x0067	; 0x800067 <ir2+0x1>
+ 334:	61 30       	cpi	r22, 0x01	; 1
+ 336:	71 05       	cpc	r23, r1
+ 338:	09 f0       	breq	.+2      	; 0x33c <main+0x2c0>
+ 33a:	af ce       	rjmp	.-674    	; 0x9a <main+0x1e>
+ 33c:	49 cf       	rjmp	.-366    	; 0x1d0 <main+0x154>
+			    {
+				PORTA = 0b10010000; // Sharp Left
+			    }
+		if((ir1 == false && ir2 == false && ir3 == false && ir4 == true  && ir5== false) || 
+		   (ir1 == false && ir2 == false && ir3 == true  && ir4 == true  && ir5== false) ||
+           (ir1 == false && ir2 == false && ir3 == false && ir4 == true  && ir5== true ) ||
+ 33e:	60 91 62 00 	lds	r22, 0x0062	; 0x800062 <ir3>
+ 342:	70 91 63 00 	lds	r23, 0x0063	; 0x800063 <ir3+0x1>
+ 346:	67 2b       	or	r22, r23
+ 348:	09 f4       	brne	.+2      	; 0x34c <main+0x2d0>
+ 34a:	80 cf       	rjmp	.-256    	; 0x24c <main+0x1d0>
+ 34c:	8d cf       	rjmp	.-230    	; 0x268 <main+0x1ec>
+		   (ir1 == false && ir2 == false && ir3 == false && ir4 == false && ir5== true ))
+ 34e:	67 2b       	or	r22, r23
+ 350:	09 f0       	breq	.+2      	; 0x354 <main+0x2d8>
+ 352:	a5 cf       	rjmp	.-182    	; 0x29e <main+0x222>
+ 354:	89 cf       	rjmp	.-238    	; 0x268 <main+0x1ec>
+		        {
+		        //PORTA = 0b00000000;
+			    //_delay_us(40);
+			    PORTA = 0b00100000; // Smooth Right
+				}
+		if((ir1 == false && ir2 == false && ir3 == true && ir4 == true && ir5== true ) ||
+ 356:	60 91 68 00 	lds	r22, 0x0068	; 0x800068 <ir1>
+ 35a:	70 91 69 00 	lds	r23, 0x0069	; 0x800069 <ir1+0x1>
+ 35e:	67 2b       	or	r22, r23
+ 360:	09 f0       	breq	.+2      	; 0x364 <main+0x2e8>
+ 362:	9b ce       	rjmp	.-714    	; 0x9a <main+0x1e>
+ 364:	a4 cf       	rjmp	.-184    	; 0x2ae <main+0x232>
+
+00000366 <_exit>:
+ 366:	f8 94       	cli
+
+00000368 <__stop_program>:
+ 368:	ff cf       	rjmp	.-2      	; 0x368 <__stop_program>

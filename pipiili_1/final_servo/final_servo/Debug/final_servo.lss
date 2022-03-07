@@ -1,0 +1,154 @@
+
+final_servo.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000c8  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  0000011c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  0000011c  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000014c  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000020  00000000  00000000  00000188  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000667  00000000  00000000  000001a8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000587  00000000  00000000  0000080f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000028b  00000000  00000000  00000d96  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000024  00000000  00000000  00001024  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000336  00000000  00000000  00001048  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    0000008c  00000000  00000000  0000137e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000010  00000000  00000000  0000140a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
+  64:	0c 94 62 00 	jmp	0xc4	; 0xc4 <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <main>:
+
+void main()
+{
+	
+	//Configure TIMER1
+	TCCR1A |= (1 << COM1A1 ) | (1<<WGM11) | ( 1 << WGM13) | ( 1 << WGM12 );        //NON Inverted PWM
+  6c:	8f b5       	in	r24, 0x2f	; 47
+  6e:	8a 69       	ori	r24, 0x9A	; 154
+  70:	8f bd       	out	0x2f, r24	; 47
+	TCCR1B |= ( 1 << CS10 );
+  72:	8e b5       	in	r24, 0x2e	; 46
+  74:	81 60       	ori	r24, 0x01	; 1
+  76:	8e bd       	out	0x2e, r24	; 46
+
+	ICR1 = 19999;  //fPWM=50Hz (Period = 20ms Standard).
+  78:	8f e1       	ldi	r24, 0x1F	; 31
+  7a:	9e e4       	ldi	r25, 0x4E	; 78
+  7c:	97 bd       	out	0x27, r25	; 39
+  7e:	86 bd       	out	0x26, r24	; 38
+
+	DDRD|=(1<<PD4)|(1<<PD5);   //PWM Pins as Out
+  80:	81 b3       	in	r24, 0x11	; 17
+  82:	80 63       	ori	r24, 0x30	; 48
+  84:	81 bb       	out	0x11, r24	; 17
+	
+	while(1)
+	{
+		OCR1A= 1000;  //90 degree
+  86:	48 ee       	ldi	r20, 0xE8	; 232
+  88:	53 e0       	ldi	r21, 0x03	; 3
+		_delay_ms(50);
+		OCR1A= 2000;  //90 degree
+  8a:	20 ed       	ldi	r18, 0xD0	; 208
+  8c:	37 e0       	ldi	r19, 0x07	; 7
+		_delay_ms(50);
+		OCR1A= 350;  //90 degree
+  8e:	8e e5       	ldi	r24, 0x5E	; 94
+  90:	91 e0       	ldi	r25, 0x01	; 1
+
+	DDRD|=(1<<PD4)|(1<<PD5);   //PWM Pins as Out
+	
+	while(1)
+	{
+		OCR1A= 1000;  //90 degree
+  92:	5b bd       	out	0x2b, r21	; 43
+  94:	4a bd       	out	0x2a, r20	; 42
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  96:	e3 ed       	ldi	r30, 0xD3	; 211
+  98:	f0 e3       	ldi	r31, 0x30	; 48
+  9a:	31 97       	sbiw	r30, 0x01	; 1
+  9c:	f1 f7       	brne	.-4      	; 0x9a <main+0x2e>
+  9e:	00 c0       	rjmp	.+0      	; 0xa0 <main+0x34>
+  a0:	00 00       	nop
+		_delay_ms(50);
+		OCR1A= 2000;  //90 degree
+  a2:	3b bd       	out	0x2b, r19	; 43
+  a4:	2a bd       	out	0x2a, r18	; 42
+  a6:	e3 ed       	ldi	r30, 0xD3	; 211
+  a8:	f0 e3       	ldi	r31, 0x30	; 48
+  aa:	31 97       	sbiw	r30, 0x01	; 1
+  ac:	f1 f7       	brne	.-4      	; 0xaa <main+0x3e>
+  ae:	00 c0       	rjmp	.+0      	; 0xb0 <main+0x44>
+  b0:	00 00       	nop
+		_delay_ms(50);
+		OCR1A= 350;  //90 degree
+  b2:	9b bd       	out	0x2b, r25	; 43
+  b4:	8a bd       	out	0x2a, r24	; 42
+  b6:	e3 ed       	ldi	r30, 0xD3	; 211
+  b8:	f0 e3       	ldi	r31, 0x30	; 48
+  ba:	31 97       	sbiw	r30, 0x01	; 1
+  bc:	f1 f7       	brne	.-4      	; 0xba <main+0x4e>
+  be:	00 c0       	rjmp	.+0      	; 0xc0 <main+0x54>
+  c0:	00 00       	nop
+  c2:	e7 cf       	rjmp	.-50     	; 0x92 <main+0x26>
+
+000000c4 <_exit>:
+  c4:	f8 94       	cli
+
+000000c6 <__stop_program>:
+  c6:	ff cf       	rjmp	.-2      	; 0xc6 <__stop_program>

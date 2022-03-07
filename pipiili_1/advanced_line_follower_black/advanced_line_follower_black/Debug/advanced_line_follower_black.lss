@@ -1,0 +1,816 @@
+
+advanced_line_follower_black.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000004fc  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  00000570  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          0000000c  00800060  00800060  00000570  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  00000570  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000005a0  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000080  00000000  00000000  000005dc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   00000b1a  00000000  00000000  0000065c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000600  00000000  00000000  00001176  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000680  00000000  00000000  00001776  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  000000e4  00000000  00000000  00001df8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    000003dd  00000000  00000000  00001edc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    000001b0  00000000  00000000  000022b9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000070  00000000  00000000  00002469  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   8:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	20 e0       	ldi	r18, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	ac 36       	cpi	r26, 0x6C	; 108
+  6c:	b2 07       	cpc	r27, r18
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 58 02 	call	0x4b0	; 0x4b0 <main>
+  74:	0c 94 7c 02 	jmp	0x4f8	; 0x4f8 <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <forward>:
+{	PORTA&=0xF0;		// Right function to make robot turns right
+PORTA|=0x04;  	}
+
+void reverse(void)
+{	PORTA&=0xF0;		// Reverse function to make robot move backward
+PORTA|=0x0A;	}
+  7c:	8b b3       	in	r24, 0x1b	; 27
+  7e:	80 7f       	andi	r24, 0xF0	; 240
+  80:	8b bb       	out	0x1b, r24	; 27
+  82:	8b b3       	in	r24, 0x1b	; 27
+  84:	85 60       	ori	r24, 0x05	; 5
+  86:	8b bb       	out	0x1b, r24	; 27
+  88:	08 95       	ret
+
+0000008a <left>:
+  8a:	8b b3       	in	r24, 0x1b	; 27
+  8c:	80 7f       	andi	r24, 0xF0	; 240
+  8e:	8b bb       	out	0x1b, r24	; 27
+  90:	d8 9a       	sbi	0x1b, 0	; 27
+  92:	08 95       	ret
+
+00000094 <right>:
+  94:	8b b3       	in	r24, 0x1b	; 27
+  96:	80 7f       	andi	r24, 0xF0	; 240
+  98:	8b bb       	out	0x1b, r24	; 27
+  9a:	da 9a       	sbi	0x1b, 2	; 27
+  9c:	08 95       	ret
+
+0000009e <stop>:
+
+void stop(void)			// Stop function to stop motion
+{ 	PORTA&=0xF0;	}
+  9e:	8b b3       	in	r24, 0x1b	; 27
+  a0:	80 7f       	andi	r24, 0xF0	; 240
+  a2:	8b bb       	out	0x1b, r24	; 27
+  a4:	08 95       	ret
+
+000000a6 <left_ninety>:
+
+void left_ninety(void)		// this function will make robot to rotate left on the intersection
+{ forward(); 			// small delay to move robot forward before rotating
+  a6:	0e 94 3e 00 	call	0x7c	; 0x7c <forward>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  aa:	2f e5       	ldi	r18, 0x5F	; 95
+  ac:	8a ee       	ldi	r24, 0xEA	; 234
+  ae:	90 e0       	ldi	r25, 0x00	; 0
+  b0:	21 50       	subi	r18, 0x01	; 1
+  b2:	80 40       	sbci	r24, 0x00	; 0
+  b4:	90 40       	sbci	r25, 0x00	; 0
+  b6:	e1 f7       	brne	.-8      	; 0xb0 <left_ninety+0xa>
+  b8:	00 c0       	rjmp	.+0      	; 0xba <left_ninety+0x14>
+  ba:	00 00       	nop
+	_delay_ms(300);
+	stop();
+  bc:	0e 94 4f 00 	call	0x9e	; 0x9e <stop>
+	PORTA&=0xF0;		// these values are for rotating robot left differentially
+  c0:	8b b3       	in	r24, 0x1b	; 27
+  c2:	80 7f       	andi	r24, 0xF0	; 240
+  c4:	8b bb       	out	0x1b, r24	; 27
+	PORTA|=0x09;
+  c6:	8b b3       	in	r24, 0x1b	; 27
+  c8:	89 60       	ori	r24, 0x09	; 9
+  ca:	8b bb       	out	0x1b, r24	; 27
+  cc:	2f ed       	ldi	r18, 0xDF	; 223
+  ce:	88 e2       	ldi	r24, 0x28	; 40
+  d0:	91 e0       	ldi	r25, 0x01	; 1
+  d2:	21 50       	subi	r18, 0x01	; 1
+  d4:	80 40       	sbci	r24, 0x00	; 0
+  d6:	90 40       	sbci	r25, 0x00	; 0
+  d8:	e1 f7       	brne	.-8      	; 0xd2 <left_ninety+0x2c>
+  da:	00 c0       	rjmp	.+0      	; 0xdc <left_ninety+0x36>
+  dc:	00 00       	nop
+	_delay_ms(380);
+	left();
+  de:	0e 94 45 00 	call	0x8a	; 0x8a <left>
+  e2:	87 ea       	ldi	r24, 0xA7	; 167
+  e4:	91 e6       	ldi	r25, 0x61	; 97
+  e6:	01 97       	sbiw	r24, 0x01	; 1
+  e8:	f1 f7       	brne	.-4      	; 0xe6 <left_ninety+0x40>
+  ea:	00 c0       	rjmp	.+0      	; 0xec <left_ninety+0x46>
+  ec:	00 00       	nop
+	_delay_ms(100);
+	while(S1==0);				// while its sensors are not alligned rotate
+  ee:	81 9b       	sbis	0x10, 1	; 16
+  f0:	fe cf       	rjmp	.-4      	; 0xee <left_ninety+0x48>
+	stop();		// stop after sensor allignment
+  f2:	0e 94 4f 00 	call	0x9e	; 0x9e <stop>
+	if(bot_dir==N)
+  f6:	80 91 68 00 	lds	r24, 0x0068	; 0x800068 <bot_dir>
+  fa:	90 91 69 00 	lds	r25, 0x0069	; 0x800069 <bot_dir+0x1>
+  fe:	81 30       	cpi	r24, 0x01	; 1
+ 100:	91 05       	cpc	r25, r1
+ 102:	39 f4       	brne	.+14     	; 0x112 <left_ninety+0x6c>
+	{ bot_dir=W; return;}
+ 104:	84 e0       	ldi	r24, 0x04	; 4
+ 106:	90 e0       	ldi	r25, 0x00	; 0
+ 108:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 10c:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 110:	08 95       	ret
+	if(bot_dir==W)			// change direction variable
+ 112:	84 30       	cpi	r24, 0x04	; 4
+ 114:	91 05       	cpc	r25, r1
+ 116:	39 f4       	brne	.+14     	; 0x126 <left_ninety+0x80>
+	{ bot_dir=S; return;}
+ 118:	82 e0       	ldi	r24, 0x02	; 2
+ 11a:	90 e0       	ldi	r25, 0x00	; 0
+ 11c:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 120:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 124:	08 95       	ret
+	if(bot_dir==S)
+ 126:	82 30       	cpi	r24, 0x02	; 2
+ 128:	91 05       	cpc	r25, r1
+ 12a:	39 f4       	brne	.+14     	; 0x13a <left_ninety+0x94>
+	{ bot_dir=E; return;}
+ 12c:	83 e0       	ldi	r24, 0x03	; 3
+ 12e:	90 e0       	ldi	r25, 0x00	; 0
+ 130:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 134:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 138:	08 95       	ret
+	if(bot_dir==E)
+ 13a:	03 97       	sbiw	r24, 0x03	; 3
+ 13c:	31 f4       	brne	.+12     	; 0x14a <left_ninety+0xa4>
+	{ bot_dir=N; return;}
+ 13e:	81 e0       	ldi	r24, 0x01	; 1
+ 140:	90 e0       	ldi	r25, 0x00	; 0
+ 142:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 146:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 14a:	08 95       	ret
+
+0000014c <right_ninety>:
+
+
+}
+void right_ninety(void)	// this function will make robot to rotate right on the intersection
+{
+	forward(); 		// small delay to move robot forward before rotating
+ 14c:	0e 94 3e 00 	call	0x7c	; 0x7c <forward>
+ 150:	2f e5       	ldi	r18, 0x5F	; 95
+ 152:	8a ee       	ldi	r24, 0xEA	; 234
+ 154:	90 e0       	ldi	r25, 0x00	; 0
+ 156:	21 50       	subi	r18, 0x01	; 1
+ 158:	80 40       	sbci	r24, 0x00	; 0
+ 15a:	90 40       	sbci	r25, 0x00	; 0
+ 15c:	e1 f7       	brne	.-8      	; 0x156 <right_ninety+0xa>
+ 15e:	00 c0       	rjmp	.+0      	; 0x160 <right_ninety+0x14>
+ 160:	00 00       	nop
+	_delay_ms(300);
+	PORTA&=0xF0;
+ 162:	8b b3       	in	r24, 0x1b	; 27
+ 164:	80 7f       	andi	r24, 0xF0	; 240
+ 166:	8b bb       	out	0x1b, r24	; 27
+	PORTA|=0x06; 		// these values are for rotating robot right differentially
+ 168:	8b b3       	in	r24, 0x1b	; 27
+ 16a:	86 60       	ori	r24, 0x06	; 6
+ 16c:	8b bb       	out	0x1b, r24	; 27
+ 16e:	2f ed       	ldi	r18, 0xDF	; 223
+ 170:	88 e2       	ldi	r24, 0x28	; 40
+ 172:	91 e0       	ldi	r25, 0x01	; 1
+ 174:	21 50       	subi	r18, 0x01	; 1
+ 176:	80 40       	sbci	r24, 0x00	; 0
+ 178:	90 40       	sbci	r25, 0x00	; 0
+ 17a:	e1 f7       	brne	.-8      	; 0x174 <right_ninety+0x28>
+ 17c:	00 c0       	rjmp	.+0      	; 0x17e <right_ninety+0x32>
+ 17e:	00 00       	nop
+	_delay_ms(380);
+	right();
+ 180:	0e 94 4a 00 	call	0x94	; 0x94 <right>
+ 184:	87 ea       	ldi	r24, 0xA7	; 167
+ 186:	91 e6       	ldi	r25, 0x61	; 97
+ 188:	01 97       	sbiw	r24, 0x01	; 1
+ 18a:	f1 f7       	brne	.-4      	; 0x188 <right_ninety+0x3c>
+ 18c:	00 c0       	rjmp	.+0      	; 0x18e <right_ninety+0x42>
+ 18e:	00 00       	nop
+	_delay_ms(100);
+	while(S4==0)				// while its sensors are not alligned rotate
+ 190:	80 b3       	in	r24, 0x10	; 16
+ 192:	85 70       	andi	r24, 0x05	; 5
+ 194:	e9 f3       	breq	.-6      	; 0x190 <right_ninety+0x44>
+	;
+
+	stop();			// stop after sensor allignment
+ 196:	0e 94 4f 00 	call	0x9e	; 0x9e <stop>
+	if(bot_dir==N)
+ 19a:	80 91 68 00 	lds	r24, 0x0068	; 0x800068 <bot_dir>
+ 19e:	90 91 69 00 	lds	r25, 0x0069	; 0x800069 <bot_dir+0x1>
+ 1a2:	81 30       	cpi	r24, 0x01	; 1
+ 1a4:	91 05       	cpc	r25, r1
+ 1a6:	39 f4       	brne	.+14     	; 0x1b6 <right_ninety+0x6a>
+	{ bot_dir=E; return;}
+ 1a8:	83 e0       	ldi	r24, 0x03	; 3
+ 1aa:	90 e0       	ldi	r25, 0x00	; 0
+ 1ac:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 1b0:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 1b4:	08 95       	ret
+	if(bot_dir==E)
+ 1b6:	83 30       	cpi	r24, 0x03	; 3
+ 1b8:	91 05       	cpc	r25, r1
+ 1ba:	39 f4       	brne	.+14     	; 0x1ca <right_ninety+0x7e>
+	{ bot_dir=S; return;}		// change direction variable
+ 1bc:	82 e0       	ldi	r24, 0x02	; 2
+ 1be:	90 e0       	ldi	r25, 0x00	; 0
+ 1c0:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 1c4:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 1c8:	08 95       	ret
+	if(bot_dir==S)
+ 1ca:	82 30       	cpi	r24, 0x02	; 2
+ 1cc:	91 05       	cpc	r25, r1
+ 1ce:	39 f4       	brne	.+14     	; 0x1de <right_ninety+0x92>
+	{ bot_dir=W; return;}
+ 1d0:	84 e0       	ldi	r24, 0x04	; 4
+ 1d2:	90 e0       	ldi	r25, 0x00	; 0
+ 1d4:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 1d8:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 1dc:	08 95       	ret
+	if(bot_dir==W)
+ 1de:	04 97       	sbiw	r24, 0x04	; 4
+ 1e0:	31 f4       	brne	.+12     	; 0x1ee <right_ninety+0xa2>
+	{ bot_dir=N; return;}
+ 1e2:	81 e0       	ldi	r24, 0x01	; 1
+ 1e4:	90 e0       	ldi	r25, 0x00	; 0
+ 1e6:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 1ea:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 1ee:	08 95       	ret
+
+000001f0 <line_follow>:
+}
+
+
+void line_follow(void)
+{ if((~S2)&&(~S3))
+ 1f0:	80 b3       	in	r24, 0x10	; 16
+ 1f2:	80 b3       	in	r24, 0x10	; 16
+	forward();		// function for linefollowing
+ 1f4:	0e 94 3e 00 	call	0x7c	; 0x7c <forward>
+	if((~S2)&&(S3))
+ 1f8:	80 b3       	in	r24, 0x10	; 16
+ 1fa:	82 99       	sbic	0x10, 2	; 16
+	left();
+ 1fc:	0e 94 45 00 	call	0x8a	; 0x8a <left>
+	if((S2)&&(~S3))
+ 200:	80 b3       	in	r24, 0x10	; 16
+ 202:	83 70       	andi	r24, 0x03	; 3
+ 204:	19 f0       	breq	.+6      	; 0x20c <line_follow+0x1c>
+ 206:	80 b3       	in	r24, 0x10	; 16
+	right();
+ 208:	0e 94 4a 00 	call	0x94	; 0x94 <right>
+ 20c:	08 95       	ret
+
+0000020e <step>:
+}
+
+char step(void)
+{ forward();		// small delay to avoid sensor fluctuation
+ 20e:	0e 94 3e 00 	call	0x7c	; 0x7c <forward>
+ 212:	8b e5       	ldi	r24, 0x5B	; 91
+ 214:	94 e4       	ldi	r25, 0x44	; 68
+ 216:	01 97       	sbiw	r24, 0x01	; 1
+ 218:	f1 f7       	brne	.-4      	; 0x216 <step+0x8>
+ 21a:	00 c0       	rjmp	.+0      	; 0x21c <step+0xe>
+ 21c:	00 00       	nop
+ 21e:	0f c0       	rjmp	.+30     	; 0x23e <step+0x30>
+	_delay_ms(70);
+	while(S1||S4)
+	{
+		line_follow();
+ 220:	0e 94 f8 00 	call	0x1f0	; 0x1f0 <line_follow>
+		if(FS)
+ 224:	80 b3       	in	r24, 0x10	; 16
+ 226:	86 70       	andi	r24, 0x06	; 6
+ 228:	51 f0       	breq	.+20     	; 0x23e <step+0x30>
+		{block=1;
+ 22a:	81 e0       	ldi	r24, 0x01	; 1
+ 22c:	90 e0       	ldi	r25, 0x00	; 0
+ 22e:	90 93 61 00 	sts	0x0061, r25	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 232:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <__DATA_REGION_ORIGIN__>
+			stop();		// follow line till intersection if block detected return change block variable and exit
+ 236:	0e 94 4f 00 	call	0x9e	; 0x9e <stop>
+		return 1; }
+ 23a:	81 e0       	ldi	r24, 0x01	; 1
+ 23c:	08 95       	ret
+}
+
+char step(void)
+{ forward();		// small delay to avoid sensor fluctuation
+	_delay_ms(70);
+	while(S1||S4)
+ 23e:	81 99       	sbic	0x10, 1	; 16
+ 240:	ef cf       	rjmp	.-34     	; 0x220 <step+0x12>
+ 242:	80 b3       	in	r24, 0x10	; 16
+ 244:	85 70       	andi	r24, 0x05	; 5
+ 246:	61 f7       	brne	.-40     	; 0x220 <step+0x12>
+		if(FS)
+		{block=1;
+			stop();		// follow line till intersection if block detected return change block variable and exit
+		return 1; }
+	}
+	forward();
+ 248:	0e 94 3e 00 	call	0x7c	; 0x7c <forward>
+ 24c:	8b e5       	ldi	r24, 0x5B	; 91
+ 24e:	94 e4       	ldi	r25, 0x44	; 68
+ 250:	01 97       	sbiw	r24, 0x01	; 1
+ 252:	f1 f7       	brne	.-4      	; 0x250 <step+0x42>
+ 254:	00 c0       	rjmp	.+0      	; 0x256 <step+0x48>
+ 256:	00 00       	nop
+	_delay_ms(70);
+	while(1)
+	{if((S1==1)||(S4==1))		// move forward till the intersection is crossed
+ 258:	80 b3       	in	r24, 0x10	; 16
+ 25a:	80 b3       	in	r24, 0x10	; 16
+ 25c:	85 70       	andi	r24, 0x05	; 5
+ 25e:	81 30       	cpi	r24, 0x01	; 1
+ 260:	d9 f7       	brne	.-10     	; 0x258 <step+0x4a>
+		break;
+	}
+	stop();					// stop just after intersection
+ 262:	0e 94 4f 00 	call	0x9e	; 0x9e <stop>
+	if(bot_dir==N)
+ 266:	80 91 68 00 	lds	r24, 0x0068	; 0x800068 <bot_dir>
+ 26a:	90 91 69 00 	lds	r25, 0x0069	; 0x800069 <bot_dir+0x1>
+ 26e:	81 30       	cpi	r24, 0x01	; 1
+ 270:	91 05       	cpc	r25, r1
+ 272:	59 f4       	brne	.+22     	; 0x28a <step+0x7c>
+	bot_y++;
+ 274:	20 91 66 00 	lds	r18, 0x0066	; 0x800066 <bot_y>
+ 278:	30 91 67 00 	lds	r19, 0x0067	; 0x800067 <bot_y+0x1>
+ 27c:	2f 5f       	subi	r18, 0xFF	; 255
+ 27e:	3f 4f       	sbci	r19, 0xFF	; 255
+ 280:	30 93 67 00 	sts	0x0067, r19	; 0x800067 <bot_y+0x1>
+ 284:	20 93 66 00 	sts	0x0066, r18	; 0x800066 <bot_y>
+ 288:	1c c0       	rjmp	.+56     	; 0x2c2 <step+0xb4>
+	if(bot_dir==S)
+ 28a:	82 30       	cpi	r24, 0x02	; 2
+ 28c:	91 05       	cpc	r25, r1
+ 28e:	59 f4       	brne	.+22     	; 0x2a6 <step+0x98>
+	bot_y--;
+ 290:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <bot_y>
+ 294:	90 91 67 00 	lds	r25, 0x0067	; 0x800067 <bot_y+0x1>
+ 298:	01 97       	sbiw	r24, 0x01	; 1
+ 29a:	90 93 67 00 	sts	0x0067, r25	; 0x800067 <bot_y+0x1>
+ 29e:	80 93 66 00 	sts	0x0066, r24	; 0x800066 <bot_y>
+	if(bot_dir==E)				// change robot corrdinate variable
+	bot_x++;
+	if(bot_dir==W)
+	bot_x--;
+	return 0;
+ 2a2:	80 e0       	ldi	r24, 0x00	; 0
+ 2a4:	08 95       	ret
+	stop();					// stop just after intersection
+	if(bot_dir==N)
+	bot_y++;
+	if(bot_dir==S)
+	bot_y--;
+	if(bot_dir==E)				// change robot corrdinate variable
+ 2a6:	83 30       	cpi	r24, 0x03	; 3
+ 2a8:	91 05       	cpc	r25, r1
+ 2aa:	59 f4       	brne	.+22     	; 0x2c2 <step+0xb4>
+	bot_x++;
+ 2ac:	80 91 6a 00 	lds	r24, 0x006A	; 0x80006a <bot_x>
+ 2b0:	90 91 6b 00 	lds	r25, 0x006B	; 0x80006b <bot_x+0x1>
+ 2b4:	01 96       	adiw	r24, 0x01	; 1
+ 2b6:	90 93 6b 00 	sts	0x006B, r25	; 0x80006b <bot_x+0x1>
+ 2ba:	80 93 6a 00 	sts	0x006A, r24	; 0x80006a <bot_x>
+	if(bot_dir==W)
+	bot_x--;
+	return 0;
+ 2be:	80 e0       	ldi	r24, 0x00	; 0
+ 2c0:	08 95       	ret
+	bot_y++;
+	if(bot_dir==S)
+	bot_y--;
+	if(bot_dir==E)				// change robot corrdinate variable
+	bot_x++;
+	if(bot_dir==W)
+ 2c2:	04 97       	sbiw	r24, 0x04	; 4
+ 2c4:	59 f4       	brne	.+22     	; 0x2dc <step+0xce>
+	bot_x--;
+ 2c6:	80 91 6a 00 	lds	r24, 0x006A	; 0x80006a <bot_x>
+ 2ca:	90 91 6b 00 	lds	r25, 0x006B	; 0x80006b <bot_x+0x1>
+ 2ce:	01 97       	sbiw	r24, 0x01	; 1
+ 2d0:	90 93 6b 00 	sts	0x006B, r25	; 0x80006b <bot_x+0x1>
+ 2d4:	80 93 6a 00 	sts	0x006A, r24	; 0x80006a <bot_x>
+	return 0;
+ 2d8:	80 e0       	ldi	r24, 0x00	; 0
+ 2da:	08 95       	ret
+ 2dc:	80 e0       	ldi	r24, 0x00	; 0
+}
+ 2de:	08 95       	ret
+
+000002e0 <search>:
+
+void search(void)		// make the robot moves as shown in video in search of block http://www.youtube.com/watch?v=GqAMgG-gc0c
+{ bot_y=0;
+ 2e0:	10 92 67 00 	sts	0x0067, r1	; 0x800067 <bot_y+0x1>
+ 2e4:	10 92 66 00 	sts	0x0066, r1	; 0x800066 <bot_y>
+	bot_x=0;
+ 2e8:	10 92 6b 00 	sts	0x006B, r1	; 0x80006b <bot_x+0x1>
+ 2ec:	10 92 6a 00 	sts	0x006A, r1	; 0x80006a <bot_x>
+ 2f0:	04 c0       	rjmp	.+8      	; 0x2fa <search+0x1a>
+	while(1) {
+		while(bot_y<grid_y)
+		{ if(step())
+ 2f2:	0e 94 07 01 	call	0x20e	; 0x20e <step>
+ 2f6:	81 11       	cpse	r24, r1
+ 2f8:	42 c0       	rjmp	.+132    	; 0x37e <search+0x9e>
+
+void search(void)		// make the robot moves as shown in video in search of block http://www.youtube.com/watch?v=GqAMgG-gc0c
+{ bot_y=0;
+	bot_x=0;
+	while(1) {
+		while(bot_y<grid_y)
+ 2fa:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <bot_y>
+ 2fe:	90 91 67 00 	lds	r25, 0x0067	; 0x800067 <bot_y+0x1>
+ 302:	20 91 62 00 	lds	r18, 0x0062	; 0x800062 <grid_y>
+ 306:	30 91 63 00 	lds	r19, 0x0063	; 0x800063 <grid_y+0x1>
+ 30a:	82 17       	cp	r24, r18
+ 30c:	93 07       	cpc	r25, r19
+ 30e:	8c f3       	brlt	.-30     	; 0x2f2 <search+0x12>
+		{ if(step())
+			return;
+		}
+		if((bot_x==grid_x)&&(bot_y==0))
+ 310:	40 91 6a 00 	lds	r20, 0x006A	; 0x80006a <bot_x>
+ 314:	50 91 6b 00 	lds	r21, 0x006B	; 0x80006b <bot_x+0x1>
+ 318:	20 91 64 00 	lds	r18, 0x0064	; 0x800064 <grid_x>
+ 31c:	30 91 65 00 	lds	r19, 0x0065	; 0x800065 <grid_x+0x1>
+ 320:	42 17       	cp	r20, r18
+ 322:	53 07       	cpc	r21, r19
+ 324:	11 f4       	brne	.+4      	; 0x32a <search+0x4a>
+ 326:	89 2b       	or	r24, r25
+ 328:	51 f1       	breq	.+84     	; 0x37e <search+0x9e>
+		return;
+		right_ninety();
+ 32a:	0e 94 a6 00 	call	0x14c	; 0x14c <right_ninety>
+		if(step())
+ 32e:	0e 94 07 01 	call	0x20e	; 0x20e <step>
+ 332:	81 11       	cpse	r24, r1
+ 334:	24 c0       	rjmp	.+72     	; 0x37e <search+0x9e>
+		return;
+		right_ninety();
+ 336:	0e 94 a6 00 	call	0x14c	; 0x14c <right_ninety>
+
+		while(bot_y>0)
+ 33a:	04 c0       	rjmp	.+8      	; 0x344 <search+0x64>
+		{ if(step())
+ 33c:	0e 94 07 01 	call	0x20e	; 0x20e <step>
+ 340:	81 11       	cpse	r24, r1
+ 342:	1d c0       	rjmp	.+58     	; 0x37e <search+0x9e>
+		right_ninety();
+		if(step())
+		return;
+		right_ninety();
+
+		while(bot_y>0)
+ 344:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <bot_y>
+ 348:	90 91 67 00 	lds	r25, 0x0067	; 0x800067 <bot_y+0x1>
+ 34c:	18 16       	cp	r1, r24
+ 34e:	19 06       	cpc	r1, r25
+ 350:	ac f3       	brlt	.-22     	; 0x33c <search+0x5c>
+		{ if(step())
+			return;
+		}
+		if((bot_x==grid_x)&&(bot_y==0))
+ 352:	40 91 6a 00 	lds	r20, 0x006A	; 0x80006a <bot_x>
+ 356:	50 91 6b 00 	lds	r21, 0x006B	; 0x80006b <bot_x+0x1>
+ 35a:	20 91 64 00 	lds	r18, 0x0064	; 0x800064 <grid_x>
+ 35e:	30 91 65 00 	lds	r19, 0x0065	; 0x800065 <grid_x+0x1>
+ 362:	42 17       	cp	r20, r18
+ 364:	53 07       	cpc	r21, r19
+ 366:	11 f4       	brne	.+4      	; 0x36c <search+0x8c>
+ 368:	89 2b       	or	r24, r25
+ 36a:	49 f0       	breq	.+18     	; 0x37e <search+0x9e>
+		return;
+		
+		left_ninety();
+ 36c:	0e 94 53 00 	call	0xa6	; 0xa6 <left_ninety>
+		if(step())
+ 370:	0e 94 07 01 	call	0x20e	; 0x20e <step>
+ 374:	81 11       	cpse	r24, r1
+ 376:	03 c0       	rjmp	.+6      	; 0x37e <search+0x9e>
+		return;
+		left_ninety();
+ 378:	0e 94 53 00 	call	0xa6	; 0xa6 <left_ninety>
+	}
+ 37c:	be cf       	rjmp	.-132    	; 0x2fa <search+0x1a>
+ 37e:	08 95       	ret
+
+00000380 <over_turn>:
+}
+over_turn()
+{
+	PORTA&=0xF0;
+ 380:	8b b3       	in	r24, 0x1b	; 27
+ 382:	80 7f       	andi	r24, 0xF0	; 240
+ 384:	8b bb       	out	0x1b, r24	; 27
+	PORTA|=0x06;
+ 386:	8b b3       	in	r24, 0x1b	; 27
+ 388:	86 60       	ori	r24, 0x06	; 6
+ 38a:	8b bb       	out	0x1b, r24	; 27
+ 38c:	2f e1       	ldi	r18, 0x1F	; 31
+ 38e:	8f eb       	ldi	r24, 0xBF	; 191
+ 390:	92 e0       	ldi	r25, 0x02	; 2
+ 392:	21 50       	subi	r18, 0x01	; 1
+ 394:	80 40       	sbci	r24, 0x00	; 0
+ 396:	90 40       	sbci	r25, 0x00	; 0
+ 398:	e1 f7       	brne	.-8      	; 0x392 <over_turn+0x12>
+ 39a:	00 c0       	rjmp	.+0      	; 0x39c <over_turn+0x1c>
+ 39c:	00 00       	nop
+	_delay_ms(900);
+	right();			// over turn and changes direction
+ 39e:	0e 94 4a 00 	call	0x94	; 0x94 <right>
+ 3a2:	87 ea       	ldi	r24, 0xA7	; 167
+ 3a4:	91 e6       	ldi	r25, 0x61	; 97
+ 3a6:	01 97       	sbiw	r24, 0x01	; 1
+ 3a8:	f1 f7       	brne	.-4      	; 0x3a6 <over_turn+0x26>
+ 3aa:	00 c0       	rjmp	.+0      	; 0x3ac <over_turn+0x2c>
+ 3ac:	00 00       	nop
+	_delay_ms(100);
+	while(S4==0)
+ 3ae:	80 b3       	in	r24, 0x10	; 16
+ 3b0:	85 70       	andi	r24, 0x05	; 5
+ 3b2:	e9 f3       	breq	.-6      	; 0x3ae <over_turn+0x2e>
+	;
+	stop();
+ 3b4:	0e 94 4f 00 	call	0x9e	; 0x9e <stop>
+	if(bot_dir==N)
+ 3b8:	80 91 68 00 	lds	r24, 0x0068	; 0x800068 <bot_dir>
+ 3bc:	90 91 69 00 	lds	r25, 0x0069	; 0x800069 <bot_dir+0x1>
+ 3c0:	81 30       	cpi	r24, 0x01	; 1
+ 3c2:	91 05       	cpc	r25, r1
+ 3c4:	39 f4       	brne	.+14     	; 0x3d4 <over_turn+0x54>
+	{ bot_dir=S; return;}
+ 3c6:	82 e0       	ldi	r24, 0x02	; 2
+ 3c8:	90 e0       	ldi	r25, 0x00	; 0
+ 3ca:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 3ce:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 3d2:	08 95       	ret
+	if(bot_dir==E)
+ 3d4:	83 30       	cpi	r24, 0x03	; 3
+ 3d6:	91 05       	cpc	r25, r1
+ 3d8:	39 f4       	brne	.+14     	; 0x3e8 <over_turn+0x68>
+	{ bot_dir=W; return;}
+ 3da:	84 e0       	ldi	r24, 0x04	; 4
+ 3dc:	90 e0       	ldi	r25, 0x00	; 0
+ 3de:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 3e2:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 3e6:	08 95       	ret
+	if(bot_dir==S)
+ 3e8:	82 30       	cpi	r24, 0x02	; 2
+ 3ea:	91 05       	cpc	r25, r1
+ 3ec:	39 f4       	brne	.+14     	; 0x3fc <over_turn+0x7c>
+	{ bot_dir=N; return;}
+ 3ee:	81 e0       	ldi	r24, 0x01	; 1
+ 3f0:	90 e0       	ldi	r25, 0x00	; 0
+ 3f2:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 3f6:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 3fa:	08 95       	ret
+	if(bot_dir==W)
+ 3fc:	04 97       	sbiw	r24, 0x04	; 4
+ 3fe:	31 f4       	brne	.+12     	; 0x40c <__LOCK_REGION_LENGTH__+0xc>
+	{ bot_dir=E; return;}
+ 400:	83 e0       	ldi	r24, 0x03	; 3
+ 402:	90 e0       	ldi	r25, 0x00	; 0
+ 404:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 408:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+
+
+}
+ 40c:	08 95       	ret
+
+0000040e <reach_home>:
+
+reach_home()  			// function to take robot to initial cooridnate
+{ 		// many more condition exits according to robots direction of approching block, write them if you want!
+	step();
+ 40e:	0e 94 07 01 	call	0x20e	; 0x20e <step>
+	bot_y--;
+ 412:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <bot_y>
+ 416:	90 91 67 00 	lds	r25, 0x0067	; 0x800067 <bot_y+0x1>
+ 41a:	01 97       	sbiw	r24, 0x01	; 1
+ 41c:	90 93 67 00 	sts	0x0067, r25	; 0x800067 <bot_y+0x1>
+ 420:	80 93 66 00 	sts	0x0066, r24	; 0x800066 <bot_y>
+	if(bot_x!=0)
+ 424:	80 91 6a 00 	lds	r24, 0x006A	; 0x80006a <bot_x>
+ 428:	90 91 6b 00 	lds	r25, 0x006B	; 0x80006b <bot_x+0x1>
+ 42c:	89 2b       	or	r24, r25
+ 42e:	a9 f1       	breq	.+106    	; 0x49a <reach_home+0x8c>
+	{ left_ninety();
+ 430:	0e 94 53 00 	call	0xa6	; 0xa6 <left_ninety>
+		while(bot_x)
+ 434:	80 91 6a 00 	lds	r24, 0x006A	; 0x80006a <bot_x>
+ 438:	90 91 6b 00 	lds	r25, 0x006B	; 0x80006b <bot_x+0x1>
+ 43c:	89 2b       	or	r24, r25
+ 43e:	69 f1       	breq	.+90     	; 0x49a <reach_home+0x8c>
+		step();
+ 440:	0e 94 07 01 	call	0x20e	; 0x20e <step>
+{ 		// many more condition exits according to robots direction of approching block, write them if you want!
+	step();
+	bot_y--;
+	if(bot_x!=0)
+	{ left_ninety();
+		while(bot_x)
+ 444:	80 91 6a 00 	lds	r24, 0x006A	; 0x80006a <bot_x>
+ 448:	90 91 6b 00 	lds	r25, 0x006B	; 0x80006b <bot_x+0x1>
+ 44c:	89 2b       	or	r24, r25
+ 44e:	c1 f7       	brne	.-16     	; 0x440 <reach_home+0x32>
+ 450:	24 c0       	rjmp	.+72     	; 0x49a <reach_home+0x8c>
+		step();
+	}
+	if(bot_x==0)
+	{ if( bot_dir==N)
+		{ over_turn();
+ 452:	0e 94 c0 01 	call	0x380	; 0x380 <over_turn>
+			while(bot_y)
+ 456:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <bot_y>
+ 45a:	90 91 67 00 	lds	r25, 0x0067	; 0x800067 <bot_y+0x1>
+ 45e:	89 2b       	or	r24, r25
+ 460:	21 f1       	breq	.+72     	; 0x4aa <reach_home+0x9c>
+			step();
+ 462:	0e 94 07 01 	call	0x20e	; 0x20e <step>
+		step();
+	}
+	if(bot_x==0)
+	{ if( bot_dir==N)
+		{ over_turn();
+			while(bot_y)
+ 466:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <bot_y>
+ 46a:	90 91 67 00 	lds	r25, 0x0067	; 0x800067 <bot_y+0x1>
+ 46e:	89 2b       	or	r24, r25
+ 470:	c1 f7       	brne	.-16     	; 0x462 <reach_home+0x54>
+ 472:	1b c0       	rjmp	.+54     	; 0x4aa <reach_home+0x9c>
+			step();
+			return;
+		}
+		if ( bot_dir==W)
+ 474:	04 97       	sbiw	r24, 0x04	; 4
+ 476:	c9 f4       	brne	.+50     	; 0x4aa <reach_home+0x9c>
+		{ left_ninety();
+ 478:	0e 94 53 00 	call	0xa6	; 0xa6 <left_ninety>
+			while(bot_y)
+ 47c:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <bot_y>
+ 480:	90 91 67 00 	lds	r25, 0x0067	; 0x800067 <bot_y+0x1>
+ 484:	89 2b       	or	r24, r25
+ 486:	89 f0       	breq	.+34     	; 0x4aa <reach_home+0x9c>
+			step();
+ 488:	0e 94 07 01 	call	0x20e	; 0x20e <step>
+			step();
+			return;
+		}
+		if ( bot_dir==W)
+		{ left_ninety();
+			while(bot_y)
+ 48c:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <bot_y>
+ 490:	90 91 67 00 	lds	r25, 0x0067	; 0x800067 <bot_y+0x1>
+ 494:	89 2b       	or	r24, r25
+ 496:	c1 f7       	brne	.-16     	; 0x488 <reach_home+0x7a>
+ 498:	08 c0       	rjmp	.+16     	; 0x4aa <reach_home+0x9c>
+	{ left_ninety();
+		while(bot_x)
+		step();
+	}
+	if(bot_x==0)
+	{ if( bot_dir==N)
+ 49a:	80 91 68 00 	lds	r24, 0x0068	; 0x800068 <bot_dir>
+ 49e:	90 91 69 00 	lds	r25, 0x0069	; 0x800069 <bot_dir+0x1>
+ 4a2:	81 30       	cpi	r24, 0x01	; 1
+ 4a4:	91 05       	cpc	r25, r1
+ 4a6:	31 f7       	brne	.-52     	; 0x474 <reach_home+0x66>
+ 4a8:	d4 cf       	rjmp	.-88     	; 0x452 <reach_home+0x44>
+			step();
+			return;
+		}
+	}
+	
+}
+ 4aa:	80 e0       	ldi	r24, 0x00	; 0
+ 4ac:	90 e0       	ldi	r25, 0x00	; 0
+ 4ae:	08 95       	ret
+
+000004b0 <main>:
+void main (void)
+{
+	DDRB=0x00;  // making PORTB as input
+ 4b0:	17 ba       	out	0x17, r1	; 23
+	DDRA=0xFF;  // making PORTA as input
+ 4b2:	8f ef       	ldi	r24, 0xFF	; 255
+ 4b4:	8a bb       	out	0x1a, r24	; 26
+	DDRD=0x00;  // making PORTA as output
+ 4b6:	11 ba       	out	0x11, r1	; 17
+	//PORTA=0x30;  // setting Logic high on Enable pin of L293D
+	grid_x=3; 	// setting maximun X coordinate of grid
+ 4b8:	83 e0       	ldi	r24, 0x03	; 3
+ 4ba:	90 e0       	ldi	r25, 0x00	; 0
+ 4bc:	90 93 65 00 	sts	0x0065, r25	; 0x800065 <grid_x+0x1>
+ 4c0:	80 93 64 00 	sts	0x0064, r24	; 0x800064 <grid_x>
+	grid_y=3; 	// setting maximum Y coordinate of grid
+ 4c4:	90 93 63 00 	sts	0x0063, r25	; 0x800063 <grid_y+0x1>
+ 4c8:	80 93 62 00 	sts	0x0062, r24	; 0x800062 <grid_y>
+	bot_dir=1;	// Initial robot direction , 1= North
+ 4cc:	81 e0       	ldi	r24, 0x01	; 1
+ 4ce:	90 e0       	ldi	r25, 0x00	; 0
+ 4d0:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <bot_dir+0x1>
+ 4d4:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <bot_dir>
+ 4d8:	2f e3       	ldi	r18, 0x3F	; 63
+ 4da:	8d e0       	ldi	r24, 0x0D	; 13
+ 4dc:	93 e0       	ldi	r25, 0x03	; 3
+ 4de:	21 50       	subi	r18, 0x01	; 1
+ 4e0:	80 40       	sbci	r24, 0x00	; 0
+ 4e2:	90 40       	sbci	r25, 0x00	; 0
+ 4e4:	e1 f7       	brne	.-8      	; 0x4de <main+0x2e>
+ 4e6:	00 c0       	rjmp	.+0      	; 0x4e8 <main+0x38>
+ 4e8:	00 00       	nop
+	_delay_ms(1000);  // a small delay before code starts
+
+	search();   // function to search for robot
+ 4ea:	0e 94 70 01 	call	0x2e0	; 0x2e0 <search>
+	over_turn(); 	// make over turn
+ 4ee:	0e 94 c0 01 	call	0x380	; 0x380 <over_turn>
+	reach_home();	// return to initial coordinate
+ 4f2:	0e 94 07 02 	call	0x40e	; 0x40e <reach_home>
+ 4f6:	ff cf       	rjmp	.-2      	; 0x4f6 <main+0x46>
+
+000004f8 <_exit>:
+ 4f8:	f8 94       	cli
+
+000004fa <__stop_program>:
+ 4fa:	ff cf       	rjmp	.-2      	; 0x4fa <__stop_program>

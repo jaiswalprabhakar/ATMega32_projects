@@ -1,0 +1,894 @@
+
+tcs_based_on_range.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000004b4  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  00000508  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  00000508  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000538  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000068  00000000  00000000  00000574  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000adc  00000000  00000000  000005dc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 0000061b  00000000  00000000  000010b8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000050f  00000000  00000000  000016d3  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000124  00000000  00000000  00001be4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    000003e9  00000000  00000000  00001d08  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000870  00000000  00000000  000020f1  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000058  00000000  00000000  00002961  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 8e 01 	call	0x31c	; 0x31c <main>
+  64:	0c 94 58 02 	jmp	0x4b0	; 0x4b0 <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <TCSSelectRed>:
+}
+
+void TCSSelectClear()
+{
+	PORTA |= (1 << PINA2);
+	PORTA &= ~(1 << PINA1);
+  6c:	da 98       	cbi	0x1b, 2	; 27
+  6e:	d9 98       	cbi	0x1b, 1	; 27
+  70:	08 95       	ret
+
+00000072 <TCSSelectGreen>:
+  72:	8b b3       	in	r24, 0x1b	; 27
+  74:	86 60       	ori	r24, 0x06	; 6
+  76:	8b bb       	out	0x1b, r24	; 27
+  78:	08 95       	ret
+
+0000007a <TCSSelectBlue>:
+  7a:	da 98       	cbi	0x1b, 2	; 27
+  7c:	d9 9a       	sbi	0x1b, 1	; 27
+  7e:	08 95       	ret
+
+00000080 <TCSMeasure>:
+
+
+
+
+uint32_t TCSMeasure()
+{
+  80:	cf 92       	push	r12
+  82:	df 92       	push	r13
+  84:	ef 92       	push	r14
+  86:	ff 92       	push	r15
+  88:	0f 93       	push	r16
+  8a:	1f 93       	push	r17
+	//timeout zone
+	unsigned long numloops = 0;
+	unsigned long maxloops = 500000;
+	unsigned long width = 0;
+	// wait for any previous pulse to end
+	while ( RC_PIN_STATE == 1)
+  8c:	cb 99       	sbic	0x19, 3	; 25
+  8e:	9c c0       	rjmp	.+312    	; 0x1c8 <TCSMeasure+0x148>
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+  90:	99 b3       	in	r25, 0x19	; 25
+  92:	93 fb       	bst	r25, 3
+  94:	99 27       	eor	r25, r25
+  96:	90 f9       	bld	r25, 0
+  98:	81 e0       	ldi	r24, 0x01	; 1
+  9a:	98 27       	eor	r25, r24
+		if (numloops++ == maxloops) break;
+  9c:	41 e0       	ldi	r20, 0x01	; 1
+  9e:	50 e0       	ldi	r21, 0x00	; 0
+  a0:	60 e0       	ldi	r22, 0x00	; 0
+  a2:	70 e0       	ldi	r23, 0x00	; 0
+	unsigned long maxloops = 500000;
+	unsigned long width = 0;
+	// wait for any previous pulse to end
+	while ( RC_PIN_STATE == 1)
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+  a4:	21 e0       	ldi	r18, 0x01	; 1
+  a6:	e0 e0       	ldi	r30, 0x00	; 0
+  a8:	11 c0       	rjmp	.+34     	; 0xcc <TCSMeasure+0x4c>
+  aa:	89 b3       	in	r24, 0x19	; 25
+  ac:	92 2f       	mov	r25, r18
+  ae:	38 2f       	mov	r19, r24
+  b0:	38 70       	andi	r19, 0x08	; 8
+  b2:	83 fd       	sbrc	r24, 3
+  b4:	9e 2f       	mov	r25, r30
+		if (numloops++ == maxloops) break;
+  b6:	4f 5f       	subi	r20, 0xFF	; 255
+  b8:	5f 4f       	sbci	r21, 0xFF	; 255
+  ba:	6f 4f       	sbci	r22, 0xFF	; 255
+  bc:	7f 4f       	sbci	r23, 0xFF	; 255
+  be:	41 32       	cpi	r20, 0x21	; 33
+  c0:	81 ea       	ldi	r24, 0xA1	; 161
+  c2:	58 07       	cpc	r21, r24
+  c4:	87 e0       	ldi	r24, 0x07	; 7
+  c6:	68 07       	cpc	r22, r24
+  c8:	71 05       	cpc	r23, r1
+  ca:	69 f1       	breq	.+90     	; 0x126 <TCSMeasure+0xa6>
+	//timeout zone
+	unsigned long numloops = 0;
+	unsigned long maxloops = 500000;
+	unsigned long width = 0;
+	// wait for any previous pulse to end
+	while ( RC_PIN_STATE == 1)
+  cc:	91 30       	cpi	r25, 0x01	; 1
+  ce:	69 f3       	breq	.-38     	; 0xaa <TCSMeasure+0x2a>
+  d0:	74 c0       	rjmp	.+232    	; 0x1ba <TCSMeasure+0x13a>
+		if (numloops++ == maxloops) break;
+	}
+	// wait for the pulse to start
+	while (RC_PIN_STATE == 0)
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+  d2:	89 b3       	in	r24, 0x19	; 25
+  d4:	83 fb       	bst	r24, 3
+  d6:	88 27       	eor	r24, r24
+  d8:	80 f9       	bld	r24, 0
+  da:	89 27       	eor	r24, r25
+		if (numloops++ == maxloops) break;
+  dc:	b9 01       	movw	r22, r18
+  de:	a8 01       	movw	r20, r16
+  e0:	4f 5f       	subi	r20, 0xFF	; 255
+  e2:	5f 4f       	sbci	r21, 0xFF	; 255
+  e4:	6f 4f       	sbci	r22, 0xFF	; 255
+  e6:	7f 4f       	sbci	r23, 0xFF	; 255
+  e8:	00 32       	cpi	r16, 0x20	; 32
+  ea:	11 4a       	sbci	r17, 0xA1	; 161
+  ec:	27 40       	sbci	r18, 0x07	; 7
+  ee:	31 05       	cpc	r19, r1
+  f0:	39 f0       	breq	.+14     	; 0x100 <TCSMeasure+0x80>
+  f2:	8a 01       	movw	r16, r20
+  f4:	9b 01       	movw	r18, r22
+  f6:	01 c0       	rjmp	.+2      	; 0xfa <TCSMeasure+0x7a>
+		if (numloops++ == maxloops) break;
+	}
+	// wait for the pulse to start
+	while (RC_PIN_STATE == 0)
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+  f8:	91 e0       	ldi	r25, 0x01	; 1
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+		if (numloops++ == maxloops) break;
+	}
+	// wait for the pulse to start
+	while (RC_PIN_STATE == 0)
+  fa:	88 23       	and	r24, r24
+  fc:	51 f3       	breq	.-44     	; 0xd2 <TCSMeasure+0x52>
+  fe:	02 c0       	rjmp	.+4      	; 0x104 <TCSMeasure+0x84>
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+		if (numloops++ == maxloops) break;
+ 100:	8a 01       	movw	r16, r20
+ 102:	9b 01       	movw	r18, r22
+	}
+	
+	// wait for the pulse to stop @ here we are measuring the pulse width = incrementing the WIDTH value by one each cycle. atmega328 1 micro second is equal to 16 cycles.
+	while (RC_PIN_STATE == 1)
+ 104:	81 30       	cpi	r24, 0x01	; 1
+ 106:	09 f0       	breq	.+2      	; 0x10a <TCSMeasure+0x8a>
+ 108:	42 c0       	rjmp	.+132    	; 0x18e <TCSMeasure+0x10e>
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0);
+ 10a:	89 b3       	in	r24, 0x19	; 25
+ 10c:	83 fb       	bst	r24, 3
+ 10e:	99 27       	eor	r25, r25
+ 110:	90 f9       	bld	r25, 0
+ 112:	81 e0       	ldi	r24, 0x01	; 1
+ 114:	89 27       	eor	r24, r25
+		if (numloops++ == maxloops) break;
+ 116:	00 32       	cpi	r16, 0x20	; 32
+ 118:	91 ea       	ldi	r25, 0xA1	; 161
+ 11a:	19 07       	cpc	r17, r25
+ 11c:	97 e0       	ldi	r25, 0x07	; 7
+ 11e:	29 07       	cpc	r18, r25
+ 120:	31 05       	cpc	r19, r1
+ 122:	51 f5       	brne	.+84     	; 0x178 <TCSMeasure+0xf8>
+ 124:	38 c0       	rjmp	.+112    	; 0x196 <TCSMeasure+0x116>
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+		if (numloops++ == maxloops) break;
+	}
+	// wait for the pulse to start
+	while (RC_PIN_STATE == 0)
+ 126:	31 11       	cpse	r19, r1
+ 128:	69 c0       	rjmp	.+210    	; 0x1fc <TCSMeasure+0x17c>
+ 12a:	62 c0       	rjmp	.+196    	; 0x1f0 <TCSMeasure+0x170>
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+ 12c:	89 b3       	in	r24, 0x19	; 25
+ 12e:	83 fb       	bst	r24, 3
+ 130:	99 27       	eor	r25, r25
+ 132:	90 f9       	bld	r25, 0
+ 134:	81 e0       	ldi	r24, 0x01	; 1
+ 136:	89 27       	eor	r24, r25
+		if (numloops++ == maxloops) break;
+ 138:	8a 01       	movw	r16, r20
+ 13a:	9b 01       	movw	r18, r22
+ 13c:	0f 5f       	subi	r16, 0xFF	; 255
+ 13e:	1f 4f       	sbci	r17, 0xFF	; 255
+ 140:	2f 4f       	sbci	r18, 0xFF	; 255
+ 142:	3f 4f       	sbci	r19, 0xFF	; 255
+ 144:	40 32       	cpi	r20, 0x20	; 32
+ 146:	51 4a       	sbci	r21, 0xA1	; 161
+ 148:	67 40       	sbci	r22, 0x07	; 7
+ 14a:	71 05       	cpc	r23, r1
+ 14c:	a9 f6       	brne	.-86     	; 0xf8 <TCSMeasure+0x78>
+ 14e:	da cf       	rjmp	.-76     	; 0x104 <TCSMeasure+0x84>
+	}
+	
+	// wait for the pulse to stop @ here we are measuring the pulse width = incrementing the WIDTH value by one each cycle. atmega328 1 micro second is equal to 16 cycles.
+	while (RC_PIN_STATE == 1)
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0);
+ 150:	89 b3       	in	r24, 0x19	; 25
+ 152:	83 fb       	bst	r24, 3
+ 154:	88 27       	eor	r24, r24
+ 156:	80 f9       	bld	r24, 0
+ 158:	89 27       	eor	r24, r25
+		if (numloops++ == maxloops) break;
+ 15a:	68 01       	movw	r12, r16
+ 15c:	79 01       	movw	r14, r18
+ 15e:	c4 0e       	add	r12, r20
+ 160:	d5 1e       	adc	r13, r21
+ 162:	e6 1e       	adc	r14, r22
+ 164:	f7 1e       	adc	r15, r23
+ 166:	e0 e2       	ldi	r30, 0x20	; 32
+ 168:	ce 16       	cp	r12, r30
+ 16a:	e1 ea       	ldi	r30, 0xA1	; 161
+ 16c:	de 06       	cpc	r13, r30
+ 16e:	e7 e0       	ldi	r30, 0x07	; 7
+ 170:	ee 06       	cpc	r14, r30
+ 172:	f1 04       	cpc	r15, r1
+ 174:	29 f4       	brne	.+10     	; 0x180 <TCSMeasure+0x100>
+ 176:	12 c0       	rjmp	.+36     	; 0x19c <TCSMeasure+0x11c>
+	unsigned long width = 0;
+	// wait for any previous pulse to end
+	while ( RC_PIN_STATE == 1)
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+		if (numloops++ == maxloops) break;
+ 178:	40 e0       	ldi	r20, 0x00	; 0
+ 17a:	50 e0       	ldi	r21, 0x00	; 0
+ 17c:	ba 01       	movw	r22, r20
+	}
+	
+	// wait for the pulse to stop @ here we are measuring the pulse width = incrementing the WIDTH value by one each cycle. atmega328 1 micro second is equal to 16 cycles.
+	while (RC_PIN_STATE == 1)
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0);
+ 17e:	91 e0       	ldi	r25, 0x01	; 1
+		if (numloops++ == maxloops) break;
+		width++;
+ 180:	4f 5f       	subi	r20, 0xFF	; 255
+ 182:	5f 4f       	sbci	r21, 0xFF	; 255
+ 184:	6f 4f       	sbci	r22, 0xFF	; 255
+ 186:	7f 4f       	sbci	r23, 0xFF	; 255
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+		if (numloops++ == maxloops) break;
+	}
+	
+	// wait for the pulse to stop @ here we are measuring the pulse width = incrementing the WIDTH value by one each cycle. atmega328 1 micro second is equal to 16 cycles.
+	while (RC_PIN_STATE == 1)
+ 188:	81 30       	cpi	r24, 0x01	; 1
+ 18a:	11 f3       	breq	.-60     	; 0x150 <TCSMeasure+0xd0>
+ 18c:	07 c0       	rjmp	.+14     	; 0x19c <TCSMeasure+0x11c>
+ 18e:	40 e0       	ldi	r20, 0x00	; 0
+ 190:	50 e0       	ldi	r21, 0x00	; 0
+ 192:	ba 01       	movw	r22, r20
+ 194:	03 c0       	rjmp	.+6      	; 0x19c <TCSMeasure+0x11c>
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0);
+		if (numloops++ == maxloops) break;
+ 196:	40 e0       	ldi	r20, 0x00	; 0
+ 198:	50 e0       	ldi	r21, 0x00	; 0
+ 19a:	ba 01       	movw	r22, r20
+		width++;
+	}
+
+	float RC_VALUE = width/16;
+	return RC_VALUE;
+ 19c:	cb 01       	movw	r24, r22
+ 19e:	ba 01       	movw	r22, r20
+ 1a0:	68 94       	set
+ 1a2:	13 f8       	bld	r1, 3
+ 1a4:	96 95       	lsr	r25
+ 1a6:	87 95       	ror	r24
+ 1a8:	77 95       	ror	r23
+ 1aa:	67 95       	ror	r22
+ 1ac:	16 94       	lsr	r1
+ 1ae:	d1 f7       	brne	.-12     	; 0x1a4 <TCSMeasure+0x124>
+ 1b0:	0e 94 f2 01 	call	0x3e4	; 0x3e4 <__floatunsisf>
+ 1b4:	0e 94 c3 01 	call	0x386	; 0x386 <__fixunssfsi>
+ 1b8:	2c c0       	rjmp	.+88     	; 0x212 <TCSMeasure+0x192>
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+		if (numloops++ == maxloops) break;
+	}
+	// wait for the pulse to start
+	while (RC_PIN_STATE == 0)
+ 1ba:	99 23       	and	r25, r25
+ 1bc:	09 f4       	brne	.+2      	; 0x1c0 <TCSMeasure+0x140>
+ 1be:	b6 cf       	rjmp	.-148    	; 0x12c <TCSMeasure+0xac>
+ 1c0:	40 e0       	ldi	r20, 0x00	; 0
+ 1c2:	50 e0       	ldi	r21, 0x00	; 0
+ 1c4:	ba 01       	movw	r22, r20
+ 1c6:	ea cf       	rjmp	.-44     	; 0x19c <TCSMeasure+0x11c>
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+ 1c8:	89 b3       	in	r24, 0x19	; 25
+ 1ca:	83 fb       	bst	r24, 3
+ 1cc:	99 27       	eor	r25, r25
+ 1ce:	90 f9       	bld	r25, 0
+ 1d0:	81 e0       	ldi	r24, 0x01	; 1
+ 1d2:	89 27       	eor	r24, r25
+		if (numloops++ == maxloops) break;
+ 1d4:	01 e0       	ldi	r16, 0x01	; 1
+ 1d6:	10 e0       	ldi	r17, 0x00	; 0
+ 1d8:	20 e0       	ldi	r18, 0x00	; 0
+ 1da:	30 e0       	ldi	r19, 0x00	; 0
+ 1dc:	8d cf       	rjmp	.-230    	; 0xf8 <TCSMeasure+0x78>
+	}
+	
+	// wait for the pulse to stop @ here we are measuring the pulse width = incrementing the WIDTH value by one each cycle. atmega328 1 micro second is equal to 16 cycles.
+	while (RC_PIN_STATE == 1)
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0);
+ 1de:	89 b3       	in	r24, 0x19	; 25
+ 1e0:	83 fb       	bst	r24, 3
+ 1e2:	99 27       	eor	r25, r25
+ 1e4:	90 f9       	bld	r25, 0
+ 1e6:	81 e0       	ldi	r24, 0x01	; 1
+ 1e8:	89 27       	eor	r24, r25
+	unsigned long width = 0;
+	// wait for any previous pulse to end
+	while ( RC_PIN_STATE == 1)
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+		if (numloops++ == maxloops) break;
+ 1ea:	8a 01       	movw	r16, r20
+ 1ec:	9b 01       	movw	r18, r22
+ 1ee:	c4 cf       	rjmp	.-120    	; 0x178 <TCSMeasure+0xf8>
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+		if (numloops++ == maxloops) break;
+	}
+	
+	// wait for the pulse to stop @ here we are measuring the pulse width = incrementing the WIDTH value by one each cycle. atmega328 1 micro second is equal to 16 cycles.
+	while (RC_PIN_STATE == 1)
+ 1f0:	33 23       	and	r19, r19
+ 1f2:	a9 f3       	breq	.-22     	; 0x1de <TCSMeasure+0x15e>
+ 1f4:	40 e0       	ldi	r20, 0x00	; 0
+ 1f6:	50 e0       	ldi	r21, 0x00	; 0
+ 1f8:	ba 01       	movw	r22, r20
+ 1fa:	d0 cf       	rjmp	.-96     	; 0x19c <TCSMeasure+0x11c>
+		if (numloops++ == maxloops) break;
+	}
+	// wait for the pulse to start
+	while (RC_PIN_STATE == 0)
+	{
+		RC_PIN_STATE = (bit_is_set(PINA,3)==0); //keep reading the pin until it changes the state
+ 1fc:	89 b3       	in	r24, 0x19	; 25
+ 1fe:	83 fb       	bst	r24, 3
+ 200:	99 27       	eor	r25, r25
+ 202:	90 f9       	bld	r25, 0
+ 204:	81 e0       	ldi	r24, 0x01	; 1
+ 206:	89 27       	eor	r24, r25
+		if (numloops++ == maxloops) break;
+ 208:	02 e2       	ldi	r16, 0x22	; 34
+ 20a:	11 ea       	ldi	r17, 0xA1	; 161
+ 20c:	27 e0       	ldi	r18, 0x07	; 7
+ 20e:	30 e0       	ldi	r19, 0x00	; 0
+ 210:	73 cf       	rjmp	.-282    	; 0xf8 <TCSMeasure+0x78>
+		width++;
+	}
+
+	float RC_VALUE = width/16;
+	return RC_VALUE;
+}
+ 212:	1f 91       	pop	r17
+ 214:	0f 91       	pop	r16
+ 216:	ff 90       	pop	r15
+ 218:	ef 90       	pop	r14
+ 21a:	df 90       	pop	r13
+ 21c:	cf 90       	pop	r12
+ 21e:	08 95       	ret
+
+00000220 <MeasureR>:
+	}
+
+}
+
+int MeasureR()
+{
+ 220:	cf 92       	push	r12
+ 222:	df 92       	push	r13
+ 224:	ef 92       	push	r14
+ 226:	ff 92       	push	r15
+	TCSSelectRed();
+ 228:	0e 94 36 00 	call	0x6c	; 0x6c <TCSSelectRed>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 22c:	89 ef       	ldi	r24, 0xF9	; 249
+ 22e:	90 e0       	ldi	r25, 0x00	; 0
+ 230:	01 97       	sbiw	r24, 0x01	; 1
+ 232:	f1 f7       	brne	.-4      	; 0x230 <MeasureR+0x10>
+ 234:	00 c0       	rjmp	.+0      	; 0x236 <MeasureR+0x16>
+ 236:	00 00       	nop
+	int r;
+
+	_delay_ms(1);
+	r=TCSMeasure();
+ 238:	0e 94 40 00 	call	0x80	; 0x80 <TCSMeasure>
+ 23c:	6b 01       	movw	r12, r22
+ 23e:	7c 01       	movw	r14, r24
+ 240:	89 ef       	ldi	r24, 0xF9	; 249
+ 242:	90 e0       	ldi	r25, 0x00	; 0
+ 244:	01 97       	sbiw	r24, 0x01	; 1
+ 246:	f1 f7       	brne	.-4      	; 0x244 <MeasureR+0x24>
+ 248:	00 c0       	rjmp	.+0      	; 0x24a <MeasureR+0x2a>
+ 24a:	00 00       	nop
+
+	_delay_ms(1);
+	r+=TCSMeasure();
+ 24c:	0e 94 40 00 	call	0x80	; 0x80 <TCSMeasure>
+ 250:	c6 0e       	add	r12, r22
+ 252:	d7 1e       	adc	r13, r23
+ 254:	89 ef       	ldi	r24, 0xF9	; 249
+ 256:	90 e0       	ldi	r25, 0x00	; 0
+ 258:	01 97       	sbiw	r24, 0x01	; 1
+ 25a:	f1 f7       	brne	.-4      	; 0x258 <MeasureR+0x38>
+ 25c:	00 c0       	rjmp	.+0      	; 0x25e <MeasureR+0x3e>
+ 25e:	00 00       	nop
+
+	_delay_ms(1);
+	r+=TCSMeasure();
+ 260:	0e 94 40 00 	call	0x80	; 0x80 <TCSMeasure>
+
+	return r;
+ 264:	c6 01       	movw	r24, r12
+ 266:	86 0f       	add	r24, r22
+ 268:	97 1f       	adc	r25, r23
+
+}
+ 26a:	ff 90       	pop	r15
+ 26c:	ef 90       	pop	r14
+ 26e:	df 90       	pop	r13
+ 270:	cf 90       	pop	r12
+ 272:	08 95       	ret
+
+00000274 <MeasureG>:
+
+int MeasureG()
+{
+ 274:	cf 92       	push	r12
+ 276:	df 92       	push	r13
+ 278:	ef 92       	push	r14
+ 27a:	ff 92       	push	r15
+	TCSSelectGreen();
+ 27c:	0e 94 39 00 	call	0x72	; 0x72 <TCSSelectGreen>
+ 280:	89 ef       	ldi	r24, 0xF9	; 249
+ 282:	90 e0       	ldi	r25, 0x00	; 0
+ 284:	01 97       	sbiw	r24, 0x01	; 1
+ 286:	f1 f7       	brne	.-4      	; 0x284 <MeasureG+0x10>
+ 288:	00 c0       	rjmp	.+0      	; 0x28a <MeasureG+0x16>
+ 28a:	00 00       	nop
+	int r;
+
+	_delay_ms(1);
+	r=TCSMeasure();
+ 28c:	0e 94 40 00 	call	0x80	; 0x80 <TCSMeasure>
+ 290:	6b 01       	movw	r12, r22
+ 292:	7c 01       	movw	r14, r24
+ 294:	89 ef       	ldi	r24, 0xF9	; 249
+ 296:	90 e0       	ldi	r25, 0x00	; 0
+ 298:	01 97       	sbiw	r24, 0x01	; 1
+ 29a:	f1 f7       	brne	.-4      	; 0x298 <MeasureG+0x24>
+ 29c:	00 c0       	rjmp	.+0      	; 0x29e <MeasureG+0x2a>
+ 29e:	00 00       	nop
+
+	_delay_ms(1);
+	r+=TCSMeasure();
+ 2a0:	0e 94 40 00 	call	0x80	; 0x80 <TCSMeasure>
+ 2a4:	c6 0e       	add	r12, r22
+ 2a6:	d7 1e       	adc	r13, r23
+ 2a8:	89 ef       	ldi	r24, 0xF9	; 249
+ 2aa:	90 e0       	ldi	r25, 0x00	; 0
+ 2ac:	01 97       	sbiw	r24, 0x01	; 1
+ 2ae:	f1 f7       	brne	.-4      	; 0x2ac <MeasureG+0x38>
+ 2b0:	00 c0       	rjmp	.+0      	; 0x2b2 <MeasureG+0x3e>
+ 2b2:	00 00       	nop
+
+	_delay_ms(1);
+	r+=TCSMeasure();
+ 2b4:	0e 94 40 00 	call	0x80	; 0x80 <TCSMeasure>
+
+	return r;
+ 2b8:	c6 01       	movw	r24, r12
+ 2ba:	86 0f       	add	r24, r22
+ 2bc:	97 1f       	adc	r25, r23
+
+}
+ 2be:	ff 90       	pop	r15
+ 2c0:	ef 90       	pop	r14
+ 2c2:	df 90       	pop	r13
+ 2c4:	cf 90       	pop	r12
+ 2c6:	08 95       	ret
+
+000002c8 <MeasureB>:
+
+int MeasureB()
+{
+ 2c8:	cf 92       	push	r12
+ 2ca:	df 92       	push	r13
+ 2cc:	ef 92       	push	r14
+ 2ce:	ff 92       	push	r15
+	TCSSelectBlue();
+ 2d0:	0e 94 3d 00 	call	0x7a	; 0x7a <TCSSelectBlue>
+ 2d4:	89 ef       	ldi	r24, 0xF9	; 249
+ 2d6:	90 e0       	ldi	r25, 0x00	; 0
+ 2d8:	01 97       	sbiw	r24, 0x01	; 1
+ 2da:	f1 f7       	brne	.-4      	; 0x2d8 <MeasureB+0x10>
+ 2dc:	00 c0       	rjmp	.+0      	; 0x2de <MeasureB+0x16>
+ 2de:	00 00       	nop
+	int r;
+
+	_delay_ms(1);
+	r=TCSMeasure();
+ 2e0:	0e 94 40 00 	call	0x80	; 0x80 <TCSMeasure>
+ 2e4:	6b 01       	movw	r12, r22
+ 2e6:	7c 01       	movw	r14, r24
+ 2e8:	89 ef       	ldi	r24, 0xF9	; 249
+ 2ea:	90 e0       	ldi	r25, 0x00	; 0
+ 2ec:	01 97       	sbiw	r24, 0x01	; 1
+ 2ee:	f1 f7       	brne	.-4      	; 0x2ec <MeasureB+0x24>
+ 2f0:	00 c0       	rjmp	.+0      	; 0x2f2 <MeasureB+0x2a>
+ 2f2:	00 00       	nop
+
+	_delay_ms(1);
+	r+=TCSMeasure();
+ 2f4:	0e 94 40 00 	call	0x80	; 0x80 <TCSMeasure>
+ 2f8:	c6 0e       	add	r12, r22
+ 2fa:	d7 1e       	adc	r13, r23
+ 2fc:	89 ef       	ldi	r24, 0xF9	; 249
+ 2fe:	90 e0       	ldi	r25, 0x00	; 0
+ 300:	01 97       	sbiw	r24, 0x01	; 1
+ 302:	f1 f7       	brne	.-4      	; 0x300 <MeasureB+0x38>
+ 304:	00 c0       	rjmp	.+0      	; 0x306 <MeasureB+0x3e>
+ 306:	00 00       	nop
+
+	_delay_ms(1);
+	r+=TCSMeasure();
+ 308:	0e 94 40 00 	call	0x80	; 0x80 <TCSMeasure>
+
+	return r;
+ 30c:	c6 01       	movw	r24, r12
+ 30e:	86 0f       	add	r24, r22
+ 310:	97 1f       	adc	r25, r23
+
+}
+ 312:	ff 90       	pop	r15
+ 314:	ef 90       	pop	r14
+ 316:	df 90       	pop	r13
+ 318:	cf 90       	pop	r12
+ 31a:	08 95       	ret
+
+0000031c <main>:
+
+
+int main(void)
+{
+	//DDRD = 0x00;
+	DDRA = 0b11110111;
+ 31c:	87 ef       	ldi	r24, 0xF7	; 247
+ 31e:	8a bb       	out	0x1a, r24	; 26
+	DDRB = 0xFF;
+ 320:	8f ef       	ldi	r24, 0xFF	; 255
+ 322:	87 bb       	out	0x17, r24	; 23
+	PORTA = ( 1 << PINA4);
+ 324:	80 e1       	ldi	r24, 0x10	; 16
+ 326:	8b bb       	out	0x1b, r24	; 27
+	PORTA = ( 1 << PINA5);
+ 328:	80 e2       	ldi	r24, 0x20	; 32
+ 32a:	8b bb       	out	0x1b, r24	; 27
+ 		{
+			PORTB = ( 1<< PINB0);
+ 		}
+ 		else if(smallest == b)
+ 		{
+ 			PORTB = ( 1 << PINB2);
+ 32c:	68 94       	set
+ 32e:	dd 24       	eor	r13, r13
+ 330:	d2 f8       	bld	r13, 2
+ 		{
+ 			PORTB = ( 1 << PINB1);
+ 		}
+ 		else if(smallest==r)
+ 		{
+			PORTB = ( 1<< PINB0);
+ 332:	ee 24       	eor	r14, r14
+ 334:	e3 94       	inc	r14
+			
+		}*/
+
+ 		if(smallest==g)
+ 		{
+ 			PORTB = ( 1 << PINB1);
+ 336:	68 94       	set
+ 338:	ff 24       	eor	r15, r15
+ 33a:	f1 f8       	bld	r15, 1
+	while(1)
+	{
+		
+		int r,g,b;
+
+		r=MeasureR();
+ 33c:	0e 94 10 01 	call	0x220	; 0x220 <MeasureR>
+ 340:	8c 01       	movw	r16, r24
+		g=MeasureG();
+ 342:	0e 94 3a 01 	call	0x274	; 0x274 <MeasureG>
+ 346:	ec 01       	movw	r28, r24
+		b=MeasureB();
+ 348:	0e 94 64 01 	call	0x2c8	; 0x2c8 <MeasureB>
+
+		int smallest;
+
+		if(r<b)
+ 34c:	08 17       	cp	r16, r24
+ 34e:	19 07       	cpc	r17, r25
+ 350:	34 f4       	brge	.+12     	; 0x35e <main+0x42>
+ 352:	98 01       	movw	r18, r16
+ 354:	c0 17       	cp	r28, r16
+ 356:	d1 07       	cpc	r29, r17
+ 358:	3c f4       	brge	.+14     	; 0x368 <main+0x4c>
+ 35a:	9e 01       	movw	r18, r28
+ 35c:	05 c0       	rjmp	.+10     	; 0x368 <main+0x4c>
+ 35e:	9e 01       	movw	r18, r28
+ 360:	8c 17       	cp	r24, r28
+ 362:	9d 07       	cpc	r25, r29
+ 364:	0c f4       	brge	.+2      	; 0x368 <main+0x4c>
+ 366:	9c 01       	movw	r18, r24
+		PORTB=0b00000001;
+		// smallest = g;
+			
+		}*/
+
+ 		if(smallest==g)
+ 368:	2c 17       	cp	r18, r28
+ 36a:	3d 07       	cpc	r19, r29
+ 36c:	11 f4       	brne	.+4      	; 0x372 <main+0x56>
+ 		{
+ 			PORTB = ( 1 << PINB1);
+ 36e:	f8 ba       	out	0x18, r15	; 24
+ 370:	e5 cf       	rjmp	.-54     	; 0x33c <main+0x20>
+ 		}
+ 		else if(smallest==r)
+ 372:	20 17       	cp	r18, r16
+ 374:	31 07       	cpc	r19, r17
+ 376:	11 f4       	brne	.+4      	; 0x37c <main+0x60>
+ 		{
+			PORTB = ( 1<< PINB0);
+ 378:	e8 ba       	out	0x18, r14	; 24
+ 37a:	e0 cf       	rjmp	.-64     	; 0x33c <main+0x20>
+ 		}
+ 		else if(smallest == b)
+ 37c:	28 17       	cp	r18, r24
+ 37e:	39 07       	cpc	r19, r25
+ 380:	e9 f6       	brne	.-70     	; 0x33c <main+0x20>
+ 		{
+ 			PORTB = ( 1 << PINB2);
+ 382:	d8 ba       	out	0x18, r13	; 24
+ 384:	db cf       	rjmp	.-74     	; 0x33c <main+0x20>
+
+00000386 <__fixunssfsi>:
+ 386:	0e 94 37 02 	call	0x46e	; 0x46e <__fp_splitA>
+ 38a:	88 f0       	brcs	.+34     	; 0x3ae <__fixunssfsi+0x28>
+ 38c:	9f 57       	subi	r25, 0x7F	; 127
+ 38e:	98 f0       	brcs	.+38     	; 0x3b6 <__fixunssfsi+0x30>
+ 390:	b9 2f       	mov	r27, r25
+ 392:	99 27       	eor	r25, r25
+ 394:	b7 51       	subi	r27, 0x17	; 23
+ 396:	b0 f0       	brcs	.+44     	; 0x3c4 <__fixunssfsi+0x3e>
+ 398:	e1 f0       	breq	.+56     	; 0x3d2 <__fixunssfsi+0x4c>
+ 39a:	66 0f       	add	r22, r22
+ 39c:	77 1f       	adc	r23, r23
+ 39e:	88 1f       	adc	r24, r24
+ 3a0:	99 1f       	adc	r25, r25
+ 3a2:	1a f0       	brmi	.+6      	; 0x3aa <__fixunssfsi+0x24>
+ 3a4:	ba 95       	dec	r27
+ 3a6:	c9 f7       	brne	.-14     	; 0x39a <__fixunssfsi+0x14>
+ 3a8:	14 c0       	rjmp	.+40     	; 0x3d2 <__fixunssfsi+0x4c>
+ 3aa:	b1 30       	cpi	r27, 0x01	; 1
+ 3ac:	91 f0       	breq	.+36     	; 0x3d2 <__fixunssfsi+0x4c>
+ 3ae:	0e 94 51 02 	call	0x4a2	; 0x4a2 <__fp_zero>
+ 3b2:	b1 e0       	ldi	r27, 0x01	; 1
+ 3b4:	08 95       	ret
+ 3b6:	0c 94 51 02 	jmp	0x4a2	; 0x4a2 <__fp_zero>
+ 3ba:	67 2f       	mov	r22, r23
+ 3bc:	78 2f       	mov	r23, r24
+ 3be:	88 27       	eor	r24, r24
+ 3c0:	b8 5f       	subi	r27, 0xF8	; 248
+ 3c2:	39 f0       	breq	.+14     	; 0x3d2 <__fixunssfsi+0x4c>
+ 3c4:	b9 3f       	cpi	r27, 0xF9	; 249
+ 3c6:	cc f3       	brlt	.-14     	; 0x3ba <__fixunssfsi+0x34>
+ 3c8:	86 95       	lsr	r24
+ 3ca:	77 95       	ror	r23
+ 3cc:	67 95       	ror	r22
+ 3ce:	b3 95       	inc	r27
+ 3d0:	d9 f7       	brne	.-10     	; 0x3c8 <__fixunssfsi+0x42>
+ 3d2:	3e f4       	brtc	.+14     	; 0x3e2 <__fixunssfsi+0x5c>
+ 3d4:	90 95       	com	r25
+ 3d6:	80 95       	com	r24
+ 3d8:	70 95       	com	r23
+ 3da:	61 95       	neg	r22
+ 3dc:	7f 4f       	sbci	r23, 0xFF	; 255
+ 3de:	8f 4f       	sbci	r24, 0xFF	; 255
+ 3e0:	9f 4f       	sbci	r25, 0xFF	; 255
+ 3e2:	08 95       	ret
+
+000003e4 <__floatunsisf>:
+ 3e4:	e8 94       	clt
+ 3e6:	09 c0       	rjmp	.+18     	; 0x3fa <__floatsisf+0x12>
+
+000003e8 <__floatsisf>:
+ 3e8:	97 fb       	bst	r25, 7
+ 3ea:	3e f4       	brtc	.+14     	; 0x3fa <__floatsisf+0x12>
+ 3ec:	90 95       	com	r25
+ 3ee:	80 95       	com	r24
+ 3f0:	70 95       	com	r23
+ 3f2:	61 95       	neg	r22
+ 3f4:	7f 4f       	sbci	r23, 0xFF	; 255
+ 3f6:	8f 4f       	sbci	r24, 0xFF	; 255
+ 3f8:	9f 4f       	sbci	r25, 0xFF	; 255
+ 3fa:	99 23       	and	r25, r25
+ 3fc:	a9 f0       	breq	.+42     	; 0x428 <__LOCK_REGION_LENGTH__+0x28>
+ 3fe:	f9 2f       	mov	r31, r25
+ 400:	96 e9       	ldi	r25, 0x96	; 150
+ 402:	bb 27       	eor	r27, r27
+ 404:	93 95       	inc	r25
+ 406:	f6 95       	lsr	r31
+ 408:	87 95       	ror	r24
+ 40a:	77 95       	ror	r23
+ 40c:	67 95       	ror	r22
+ 40e:	b7 95       	ror	r27
+ 410:	f1 11       	cpse	r31, r1
+ 412:	f8 cf       	rjmp	.-16     	; 0x404 <__LOCK_REGION_LENGTH__+0x4>
+ 414:	fa f4       	brpl	.+62     	; 0x454 <__LOCK_REGION_LENGTH__+0x54>
+ 416:	bb 0f       	add	r27, r27
+ 418:	11 f4       	brne	.+4      	; 0x41e <__LOCK_REGION_LENGTH__+0x1e>
+ 41a:	60 ff       	sbrs	r22, 0
+ 41c:	1b c0       	rjmp	.+54     	; 0x454 <__LOCK_REGION_LENGTH__+0x54>
+ 41e:	6f 5f       	subi	r22, 0xFF	; 255
+ 420:	7f 4f       	sbci	r23, 0xFF	; 255
+ 422:	8f 4f       	sbci	r24, 0xFF	; 255
+ 424:	9f 4f       	sbci	r25, 0xFF	; 255
+ 426:	16 c0       	rjmp	.+44     	; 0x454 <__LOCK_REGION_LENGTH__+0x54>
+ 428:	88 23       	and	r24, r24
+ 42a:	11 f0       	breq	.+4      	; 0x430 <__LOCK_REGION_LENGTH__+0x30>
+ 42c:	96 e9       	ldi	r25, 0x96	; 150
+ 42e:	11 c0       	rjmp	.+34     	; 0x452 <__LOCK_REGION_LENGTH__+0x52>
+ 430:	77 23       	and	r23, r23
+ 432:	21 f0       	breq	.+8      	; 0x43c <__LOCK_REGION_LENGTH__+0x3c>
+ 434:	9e e8       	ldi	r25, 0x8E	; 142
+ 436:	87 2f       	mov	r24, r23
+ 438:	76 2f       	mov	r23, r22
+ 43a:	05 c0       	rjmp	.+10     	; 0x446 <__LOCK_REGION_LENGTH__+0x46>
+ 43c:	66 23       	and	r22, r22
+ 43e:	71 f0       	breq	.+28     	; 0x45c <__LOCK_REGION_LENGTH__+0x5c>
+ 440:	96 e8       	ldi	r25, 0x86	; 134
+ 442:	86 2f       	mov	r24, r22
+ 444:	70 e0       	ldi	r23, 0x00	; 0
+ 446:	60 e0       	ldi	r22, 0x00	; 0
+ 448:	2a f0       	brmi	.+10     	; 0x454 <__LOCK_REGION_LENGTH__+0x54>
+ 44a:	9a 95       	dec	r25
+ 44c:	66 0f       	add	r22, r22
+ 44e:	77 1f       	adc	r23, r23
+ 450:	88 1f       	adc	r24, r24
+ 452:	da f7       	brpl	.-10     	; 0x44a <__LOCK_REGION_LENGTH__+0x4a>
+ 454:	88 0f       	add	r24, r24
+ 456:	96 95       	lsr	r25
+ 458:	87 95       	ror	r24
+ 45a:	97 f9       	bld	r25, 7
+ 45c:	08 95       	ret
+
+0000045e <__fp_split3>:
+ 45e:	57 fd       	sbrc	r21, 7
+ 460:	90 58       	subi	r25, 0x80	; 128
+ 462:	44 0f       	add	r20, r20
+ 464:	55 1f       	adc	r21, r21
+ 466:	59 f0       	breq	.+22     	; 0x47e <__fp_splitA+0x10>
+ 468:	5f 3f       	cpi	r21, 0xFF	; 255
+ 46a:	71 f0       	breq	.+28     	; 0x488 <__fp_splitA+0x1a>
+ 46c:	47 95       	ror	r20
+
+0000046e <__fp_splitA>:
+ 46e:	88 0f       	add	r24, r24
+ 470:	97 fb       	bst	r25, 7
+ 472:	99 1f       	adc	r25, r25
+ 474:	61 f0       	breq	.+24     	; 0x48e <__fp_splitA+0x20>
+ 476:	9f 3f       	cpi	r25, 0xFF	; 255
+ 478:	79 f0       	breq	.+30     	; 0x498 <__fp_splitA+0x2a>
+ 47a:	87 95       	ror	r24
+ 47c:	08 95       	ret
+ 47e:	12 16       	cp	r1, r18
+ 480:	13 06       	cpc	r1, r19
+ 482:	14 06       	cpc	r1, r20
+ 484:	55 1f       	adc	r21, r21
+ 486:	f2 cf       	rjmp	.-28     	; 0x46c <__fp_split3+0xe>
+ 488:	46 95       	lsr	r20
+ 48a:	f1 df       	rcall	.-30     	; 0x46e <__fp_splitA>
+ 48c:	08 c0       	rjmp	.+16     	; 0x49e <__fp_splitA+0x30>
+ 48e:	16 16       	cp	r1, r22
+ 490:	17 06       	cpc	r1, r23
+ 492:	18 06       	cpc	r1, r24
+ 494:	99 1f       	adc	r25, r25
+ 496:	f1 cf       	rjmp	.-30     	; 0x47a <__fp_splitA+0xc>
+ 498:	86 95       	lsr	r24
+ 49a:	71 05       	cpc	r23, r1
+ 49c:	61 05       	cpc	r22, r1
+ 49e:	08 94       	sec
+ 4a0:	08 95       	ret
+
+000004a2 <__fp_zero>:
+ 4a2:	e8 94       	clt
+
+000004a4 <__fp_szero>:
+ 4a4:	bb 27       	eor	r27, r27
+ 4a6:	66 27       	eor	r22, r22
+ 4a8:	77 27       	eor	r23, r23
+ 4aa:	cb 01       	movw	r24, r22
+ 4ac:	97 f9       	bld	r25, 7
+ 4ae:	08 95       	ret
+
+000004b0 <_exit>:
+ 4b0:	f8 94       	cli
+
+000004b2 <__stop_program>:
+ 4b2:	ff cf       	rjmp	.-2      	; 0x4b2 <__stop_program>
